@@ -1,7 +1,7 @@
 #ifndef __GAMEDATA_H__
 #define __GAMEDATA_H__
 
-#include "GamEngine.h"
+#include "gamengine.h"
 
 #define SND_NULL 0
 #define SND_GUNEMPTY 1

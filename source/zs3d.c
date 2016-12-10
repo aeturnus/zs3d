@@ -2,7 +2,7 @@
 // Runs on LM4F120 or TM4C123
 // Student names: change this to your names or look very silly
 // Last modification date: change this to the last modification date or look very silly
-// Last Modified: 3/6/2015 
+// Last Modified: 3/6/2015
 
 // Analog Input connected to PE2=ADC1
 // displays on Sitronox ST7735
@@ -19,12 +19,12 @@
 
 
 //#include "../random.h"
-#include "GamEngine.h"
+#include "gamengine.h"
 #include "gamedata.h"
 
-#include "print.h"
-#include "Music.h"
-#include "Interface1.h"
+//#include "print.h"
+#include "platform/music.h"
+#include "platform/interface.h"
 
 //#define W_WIDTH 40
 //#define W_HEIGHT 40
@@ -165,6 +165,8 @@ uint8_t player2RHold = 0;
 
 player playerList[2];
 camera cameraList[2];
+Interface interfaceList[2];
+
 enemy enemyList[N_ENEMIES];
 projectile projectileList[N_PROJECTILES];
 item itemList[N_ITEMS];
@@ -214,87 +216,88 @@ uint8_t player1DrawFlag = 0; //Flags to see if drawing is ready
 uint8_t player2DrawFlag = 0;
 void RenderHandler(void)
 {
-  if (stateGraphics == MENU)
-  {
-    //Interface1_LCDFillRect(0,90,160,38,0xFFFF);
-    Interface1_LCDSetCursor(0,6);
-    Interface1_LCDOutString("Press A to play");
-  }
-  else if(stateGraphics == RAYCASTING)
-  {
-    renderWorld();
-  }
+    if (stateGraphics == MENU)
+    {
+        //Interface1_LCDFillRect(0,90,160,38,0xFFFF);
+        Interface_SetCursor(&interfaceList[0],0,6);
+        Interface_OutString(&interfaceList[0],"Press A to play");
+    }
+    else if(stateGraphics == RAYCASTING)
+    {
+      renderWorld();
+    }
 }
 
 //Requests user input
 void InputHandler(void)
 {
-  if(player1Present)
-  {
-    Interface1_GetInput();
-  }
-  else
-  {
-    Interface1_Ping();
-    player1Present = Interface1_IsPresent();
-  }
+    if(player1Present)
+    {
+        Interface_GetInput(&interfaceList[0]);
+    }
+    else
+    {
+        Interface_Ping(&interfaceList[0]);
+        player1Present = Interface_IsPresent(&interfaceList[0]);
+    }
 }
 
 #define weaponReady(wpnPtr) (wpnPtr->state == READY)
 
 void renderWall(ray inputRay,uint32_t i,uint8_t interface)
 {
-  int32_t height;
-  //height = ((HEIGHT+1) - (14 * (inputRay.distance)/10000))*3/4;
-  //height = ((HEIGHT) - ((inputRay.distance)/10000))>>2;
-  //height = 20;
-  //height = toDec_3(div32_3_lhp((90 * camera1.focal),inputRay.distance));
-  height = 92 - inputRay.distance * 15 / 10000;
-  if(height<0){height = 0;};
-  if(height>90){height = 90;};
-  if(height>0)
-  {
-    if(inputRay.wallMeta & X_HIT)
+    int32_t height;
+    //height = ((HEIGHT+1) - (14 * (inputRay.distance)/10000))*3/4;
+    //height = ((HEIGHT) - ((inputRay.distance)/10000))>>2;
+    //height = 20;
+    //height = toDec_3(div32_3_lhp((90 * camera1.focal),inputRay.distance));
+    height = 92 - inputRay.distance * 15 / 10000;
+    if(height<0){height = 0;};
+    if(height>90){height = 90;};
+    if(height>0)
     {
-      switch(interface)
-      {
-        case 1:
-          //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
-          //Interface1_DrawVLine(i,45-height/2,45+height/2,0xFFFF);
-          Interface1_DrawLine(i,45-height/2,i,45+height/2,ST7735_Color565(214,198,80));
-          break;
-        case 2:
-          //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
-          break;
-      }
+        if(inputRay.wallMeta & X_HIT)
+        {
+            switch(interface)
+            {
+            case 1:
+                //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
+                //Interface1_DrawVLine(i,45-height/2,45+height/2,0xFFFF);
+                Interface_DrawLine(&interfaceList[0],i,45-height/2,i,45+height/2,ST7735_Color565(214,198,80));
+                break;
+            case 2:
+                //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
+                break;
+            }
+        }
+        else
+        {
+            switch(interface)
+            {
+            case 1:
+                //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,ST7735_Color565(127,127,127));
+                //Interface1_DrawVLine(i,45-height/2,45+height/2,ST7735_Color565(127,127,127));
+                Interface_DrawLine(&interfaceList[0],i,45-height/2,i,45+height/2,ST7735_Color565(127,127,127));
+                break;
+            case 2:
+                //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
+                break;
+            }
+        }
     }
-    else
-    {
-      switch(interface)
-      {
-        case 1:
-          //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,ST7735_Color565(127,127,127));
-          //Interface1_DrawVLine(i,45-height/2,45+height/2,ST7735_Color565(127,127,127));
-        Interface1_DrawLine(i,45-height/2,i,45+height/2,ST7735_Color565(127,127,127));
-          break;
-        case 2:
-          //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
-          break;
-      }
-    }
-  }
 }
+
 void renderWorld(void)
 {
-  Interface1_ClearBuffer();
+  Interface_ClearBuffer(&interfaceList[0]);
   //Interface2_ClearBuffer();
-  
+
   //Draw sky and ground
-  Interface1_FillRect(0,0,160,45,0xBEEF);   //Floor
-  Interface1_FillRect(0,45,160,90,0x1111);  //Ceiling
+  Interface_DirectFillRect(&interfaceList[0],0,0,160,45,0xBEEF);   //Floor
+  Interface_DirectFillRect(&interfaceList[0],0,45,160,90,0x1111);  //Ceiling
   //Interface2_FillRect(0,0,160,45,0xBEEF);   //Floor
   //Interface2_FillRect(0,45,160,90,0x1111);  //Ceiling
-  
+
   //Cast the rays
   if(player1Present)
   {
@@ -311,14 +314,14 @@ void renderWorld(void)
     renderWall(camera1.rayArray[i],i,1);
     renderWall(camera2.rayArray[i],i,2);
   }
-  
+
   //Render and occlude enemies and items
   for(i = 0; i<N_ENEMIES; i++)
   {
     fixed32_3 dX = enemyI.entityData.pos.x - camera1.pos.x;  //The entity relative to camera
     fixed32_3 dY = enemyI.entityData.pos.y - camera1.pos.y;  //
     uint8_t left = 0;
-    uint8_t right = 0; //determines if angle is to 
+    uint8_t right = 0; //determines if angle is to
     fixed32_3 angleOff = atan2Fix(dX,dY)- camera1.direction;
     if(angleOff < 0)
     {
@@ -368,7 +371,7 @@ void renderWorld(void)
     {
       spriteNum = enemyI.data->frameDeath;
     }
-    
+
     if(angleOff < camera1.FOV/2 )
     {
       if(distance < (camera1.rayArray[(camera1.FOV/2-angleOff)/camera1.dAngle].distance))
@@ -377,19 +380,19 @@ void renderWorld(void)
       }
     }
   }
-  
-  
-  
+
+
+
   //Draw weapons
   if(player1.active)
   {
     switch(player1.weapons[player1.activeWeapon].state)
     {
       case READY:
-        Interface1_ScaleSpriteOver(120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<6)/256,1000,1000,player1.weapons[player1.activeWeapon].data->readySprite);
+        Interface_ScaleSpriteOver(&interfaceList[0], 120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<6)/256,1000,1000,player1.weapons[player1.activeWeapon].data->readySprite);
         break;
       case ATTACK:
-        Interface1_ScaleSpriteOver(120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<8)/256,1000,1000,player1.weapons[player1.activeWeapon].data->fireSprite);
+        Interface_ScaleSpriteOver(&interfaceList[0],120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<8)/256,1000,1000,player1.weapons[player1.activeWeapon].data->fireSprite);
         break;
       case RELOAD:
         break;
@@ -410,25 +413,25 @@ void renderWorld(void)
         crossIndex = CROSS_RIFLE;
         break;
     }
-    Interface1_ScaleSpriteOver(80,45,1000,1000,crossIndex);
+    Interface_ScaleSpriteOver(&interfaceList[0],80,45,1000,1000,crossIndex);
   }
-  
-  
-  Interface1_DrawBuffer();
+
+
+  Interface_DrawBuffer(&interfaceList[0]);
   //Interface2_DrawBuffer();
-  
-  Interface1_LCDFillRect(0,90,160,38,0x0000);
+
+  Interface_LCDFillRect(&interfaceList[0],0,90,160,38,0x0000);
   //Interface1_LCDFillRect(0,100,80*player1.health/MAX_HEALTH,10,ST7735_Color565(255,0,0));
   if(player1.active)
   {
     //Draw black rectangle
-    Interface1_LCDFillRect(160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,ST7735_Color565(255,0,0));
+    Interface_LCDFillRect(&interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,ST7735_Color565(255,0,0));
     //Draw Ammo
-    Interface1_LCDSetCursor(1,10);
-    Interface1_LCDOutString((uint8_t*)player1.weapons[player1.activeWeapon].data->name);
+    Interface_SetCursor(&interfaceList[0],1,10);
+    Interface_OutString(&interfaceList[0],(uint8_t*)player1.weapons[player1.activeWeapon].data->name);
     if(player1.weapons[player1.activeWeapon].data->type!=MELEE && player1.active)
     {
-      Interface1_LCDSetCursor(1,11);
+      Interface_SetCursor(&interfaceList[0],1,11);
       uint32_t ammoCount;
       switch(player1.weapons[player1.activeWeapon].data->type)
       {
@@ -445,28 +448,28 @@ void renderWorld(void)
           break;
       }
       sprintf(str,"%d/%d",player1.weapons[player1.activeWeapon].magCur,ammoCount);
-      Interface1_LCDOutString(str);
+      Interface_OutString(&interfaceList[0],str);
     }
   }
-  
+
   if(!player1.active)
   {
-    
-    Interface1_LCDSetCursor(0,9);
-    Interface1_LCDOutString("You're dead...");
-    Interface1_LCDSetCursor(0,10);
+
+    Interface_SetCursor(&interfaceList[0],0,9);
+    Interface_OutString(&interfaceList[0],"You're dead...");
+    Interface_SetCursor(&interfaceList[0],0,10);
     sprintf(str,"Kills: %d",player1.kills);
-    Interface1_LCDOutString(str);
-    Interface1_LCDSetCursor(0,11);
+    Interface_OutString(&interfaceList[0],str);
+    Interface_SetCursor(&interfaceList[0],0,11);
     sprintf(str,"Time: %d seconds",player1Timer/1000);
-    Interface1_LCDOutString(str);
-    Interface1_LCDSetCursor(0,12);
+    Interface_OutString(&interfaceList[0],str);
+    Interface_SetCursor(&interfaceList[0],0,12);
     sprintf(str,"Score: %d",player1Timer/100 + player1.kills * 10 + bossKills * 1000);
-    Interface1_LCDOutString(str);
-    
+    Interface_OutString(&interfaceList[0],str);
+
   }
   //Interface1_LCDFillRect(160-(80*player1.health/MAX_HEALTH),100,80-80*player1.health/MAX_HEALTH,10,0xFFFF);
-  
+
   /*
   Interface1_LCDSetCursor(0,11);
   sprintf(str,"vX: %d",player1.entityData.vel.x);
@@ -560,7 +563,7 @@ void spawnProjectile(weapon* wpnPtr,player* owner)
       angleOff *= Random()&1?1:-1;
       fixed32_3 angle = owner->entityData.rot + angleOff;  //Get a dispersion angle
       projI.active = 1;                     //Activate this projectile
-      projI.damage = wpnPtr->data->damage;  
+      projI.damage = wpnPtr->data->damage;
       projI.entityData.vel = polarToVector(wpnPtr->data->velocity,angle);
       projI.entityData.pos = owner->entityData.pos; //Starts at playe
       projI.entityData.dim.depth = 100;
@@ -615,7 +618,7 @@ void actDirector(void)
       directorTimeout -= bossKills>2?2000:0;
       break;
   }
-  
+
 }
 
 void actIntelligence(fixed32_3 dT)
@@ -625,28 +628,28 @@ void actIntelligence(fixed32_3 dT)
   fixed32_3 distance;
   if(player1Present && player1.active)
   {
-    player1.paces += (1 + mul32_3(Interface1_GetAnalog('y'),player1.speed)/2) * dT/1000;
-    if(Interface1_GetDigital('l'))
+    player1.paces += (1 + mul32_3(Interface_GetAnalog(&interfaceList[0],'y'),player1.speed)/2) * dT/1000;
+    if(Interface_GetDigital(&interfaceList[0],'l'))
     {
-      player1.entityData.rot += Interface1_GetAnalog('x')*dT/100;
+      player1.entityData.rot += Interface_GetAnalog(&interfaceList[0],'x')*dT/100;
     }
     else
-    { 
-      player1.entityData.rot += Interface1_GetAnalog('x')*dT/25;
-      player1.entityData.vel = polarToVector(mul32_3(Interface1_GetAnalog('y'),player1.speed),player1.entityData.rot);
+    {
+      player1.entityData.rot += Interface_GetAnalog(&interfaceList[0],'x')*dT/25;
+      player1.entityData.vel = polarToVector(mul32_3(Interface_GetAnalog(&interfaceList[0],'y'),player1.speed),player1.entityData.rot);
     }
-    if(Interface1_GetDigital('x'))
+    if(Interface_GetDigital(&interfaceList[0],'x'))
     {
       //myCamera.pos.x += mul32_3(1000,cosineFix(myCamera.direction-90000));
       player1.entityData.vel.x += mul32_3(player1.speed,cosineFix(player1.entityData.rot - 90000))*dT/100;
       player1.entityData.vel.y += mul32_3(player1.speed,sineFix(player1.entityData.rot - 90000))*dT/100;
     }
-    if(Interface1_GetDigital('b'))
+    if(Interface_GetDigital(&interfaceList[0],'b'))
     {
       player1.entityData.vel.x += mul32_3(player1.speed,cosineFix(player1.entityData.rot + 90000))*dT/100;
       player1.entityData.vel.y += mul32_3(player1.speed,sineFix(player1.entityData.rot + 90000))*dT/100;
     }
-    if(Interface1_GetDigital('r'))
+    if(Interface_GetDigital(&interfaceList[0],'r'))
     {
       wpnPtr = &player1.weapons[player1.activeWeapon];
       if((digitalHold1&HOLD_R) == 0 || wpnPtr->data->fire == AUTO)
@@ -705,12 +708,12 @@ void actIntelligence(fixed32_3 dT)
         }
         digitalHold1 |= HOLD_R;
       }
-    }  
+    }
     else
     {
       digitalHold1 &= ~(digitalHold1&HOLD_R);
     }
-    if(Interface1_GetDigital('a'))
+    if(Interface_GetDigital(&interfaceList[0],'a'))
     {
         wpnPtr = &player1.weapons[player1.activeWeapon];
         if(wpnPtr->state == READY)
@@ -736,7 +739,7 @@ void actIntelligence(fixed32_3 dT)
           }
         }
     }
-    if(Interface1_GetDigital('y'))
+    if(Interface_GetDigital(&interfaceList[0],'y'))
     {
       if(!(digitalHold1&HOLD_Y))
       {
@@ -749,7 +752,7 @@ void actIntelligence(fixed32_3 dT)
       digitalHold1 &= ~(digitalHold1&HOLD_Y);
     }
   }
-  
+
   //Enemy AI
   fixed32_3 player1Dist;
   fixed32_3 player2Dist;
@@ -799,11 +802,11 @@ void actIntelligence(fixed32_3 dT)
         {
           enemyI.ai.target = &player2;
         }
-        
+
         //Change direction to target
         enemyI.entityData.rot = angleRel(&enemyI.entityData.pos,&enemyI.ai.target->entityData.pos);
         enemyI.entityData.vel = polarToVector(enemyI.data->speed,enemyI.entityData.rot); //Set velocity vector to go to this
-        
+
         //Attack
         if(enemyI.weapon.state == READY)
         {
@@ -843,7 +846,7 @@ void actIntelligence(fixed32_3 dT)
             }
           }
         }
-        
+
       }
     }
   }
@@ -854,7 +857,7 @@ void actWorld(void)
   //Random_Init(SysTick_Current); //New seed
   player1DrawFlag = 0;  //Disable drawing
   player2DrawFlag = 0;
-  
+
   ufixed32_3 dT = physicsTimer;
   physicsTimer = 0;               //Acknowledge the physics timer; reset it
   uint32_t i,j = 0;
@@ -873,7 +876,7 @@ void actWorld(void)
   {
     PH_EntityAct(&(player2.entityData),dT);
   }
-  
+
   //Fire rate and reload timers
   wpnPtr = &player1.weapons[player1.activeWeapon];
   playerPtr = &player1;
@@ -936,7 +939,7 @@ void actWorld(void)
       Music_PlaySound(SND_GUNCHAMBER);
     }
   }
-  
+
   wpnPtr = &player2.weapons[player2.activeWeapon];
   playerPtr = &player2;
   if(wpnPtr->fireTimer < wpnPtr->data->fireRate && wpnPtr->state == ATTACK)
@@ -998,8 +1001,8 @@ void actWorld(void)
       Music_PlaySound(SND_GUNCHAMBER);
     }
   }
-  
-  
+
+
   //Enemy calculations
   for(i = 0; i<N_ENEMIES; i++)
   {
@@ -1033,9 +1036,9 @@ void actWorld(void)
       PH_EntityAct(&(itemList[i].entityData),dT);
     }
   }
-  
+
   //Collision checks
-  
+
   //Check for projectiles hitting enemies
   projectile* curProj;
   enemy* curEnemy;
@@ -1089,7 +1092,7 @@ void actWorld(void)
       }
     }
   }
-  
+
   for(i = 0; i<N_ITEMS; i++)
   {
     if(itemList[i].active)
@@ -1178,7 +1181,7 @@ void actWorld(void)
   {
     camera2.direction += 10000 * dT / 1000;
   }
-  
+
   player1DrawFlag = 1;  //enable drawing
   player2DrawFlag = 1;
 }
@@ -1188,15 +1191,15 @@ void initPlayer(player* plyr)
   plyr->active = 1;
   plyr->activeWeapon = 0;
   plyr->weapons[0].state = READY;
-  
+
   initWeapon(&plyr->weapons[0],weaponPresets[WPN_KNIFE]);
   initWeapon(&plyr->weapons[1],weaponPresets[WPN_GLOCK17]);
   initWeapon(&plyr->weapons[2],weaponPresets[WPN_R870]);
   initWeapon(&plyr->weapons[3],weaponPresets[WPN_AR15]);
-  
-  
+
+
   plyr->speed = 1000;
-  
+
   plyr->entityData.pos.x = 20000;
   plyr->entityData.pos.y = 20000;
   plyr->entityData.pos.z = 1000;
@@ -1223,9 +1226,9 @@ void startGame(void)
   stateGlobal = TITLE;
   while(globalTimer < 2000);
   while(!player1Present);
-  Interface1_ClearBuffer();
+  Interface_ClearBuffer(&interfaceList[0]);
   uint32_t i = 0;
-  
+
   //Deactivate all entities
   for(i = 0; i< N_ENEMIES; i++)
   {
@@ -1242,15 +1245,15 @@ void startGame(void)
   //Initialize players
   initPlayer(&player1);
   //initPlayer(&player2);
-  
+
   while(1)
   {
     switch(stateGlobal)
     {
       case TITLE:
-        if(Interface1_GetDigital('a'))
+        if(Interface_GetDigital(&interfaceList[0],'a'))
         {
-          Random_Init(SysTick_Current^globalTimer);
+          // Random_Init(SysTick_Current^globalTimer);
           Music_PauseSong();
           stateGlobal = PLAY;
           stateGraphics = RAYCASTING;
@@ -1275,7 +1278,7 @@ int main(void)
   //Timer1_Init(&Timer1Handler,WAIT_1MS * 5);       //Request inputs every 10 ms
   Timer1_Disable();
   SysTick_DisableAll();
-  Interface1_Init();
+  Interface_Init(&interfaceList[0]);
   Music_Init();
   Music_LoadSong(4);
   Music_PlaySong();

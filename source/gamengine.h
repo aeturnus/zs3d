@@ -2,9 +2,9 @@
 #define __GAMENGINE_H__
 
 #include <stdint.h>
-#include "../../brandonware/BrandonPhysics.h"
-#include "../../brandonware/BrandonTypes.h"
-#include "../../brandonware/BrandonMath.h"
+#include "brandonware/bphysics.h"
+#include "brandonware/btypes.h"
+#include "brandonware/bmath.h"
 
 enum WeaponTypes {MELEE,HANDGUN,SHOTGUN,RIFLE};
 enum WeaponFire {SEMI,AUTO};
