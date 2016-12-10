@@ -187,17 +187,17 @@ uint32_t directorTimer3 = 0;
 uint32_t bossKills = 0;
 void TimerHandler(void)
 {
-  globalTimer++;
-  if(stateGlobal == PLAY)
-  {
-    gameTimer++;
-    player1Timer += player1.active?1:0;
-    player2Timer += player2.active?1:0;
-    physicsTimer++;
-    directorTimer1++;
-    directorTimer2++;
-    directorTimer3++;
-  }
+    globalTimer++;
+    if(stateGlobal == PLAY)
+    {
+        gameTimer++;
+        player1Timer += player1.active?1:0;
+        player2Timer += player2.active?1:0;
+        physicsTimer++;
+        directorTimer1++;
+        directorTimer2++;
+        directorTimer3++;
+    }
 }
 
 
@@ -289,1000 +289,999 @@ void renderWall(ray inputRay,uint32_t i,uint8_t interface)
 
 void renderWorld(void)
 {
-  Interface_ClearBuffer(&interfaceList[0]);
-  //Interface2_ClearBuffer();
+    Interface_ClearBuffer(&interfaceList[0]);
+    //Interface2_ClearBuffer();
 
-  //Draw sky and ground
-  Interface_DirectFillRect(&interfaceList[0],0,0,160,45,0xBEEF);   //Floor
-  Interface_DirectFillRect(&interfaceList[0],0,45,160,90,0x1111);  //Ceiling
-  //Interface2_FillRect(0,0,160,45,0xBEEF);   //Floor
-  //Interface2_FillRect(0,45,160,90,0x1111);  //Ceiling
+    //Draw sky and ground
+    Interface_DirectFillRect(&interfaceList[0],0,0,160,45,0xBEEF);     //Floor
+    Interface_DirectFillRect(&interfaceList[0],0,45,160,90,0x1111);    //Ceiling
+    //Interface2_FillRect(0,0,160,45,0xBEEF);     //Floor
+    //Interface2_FillRect(0,45,160,90,0x1111);    //Ceiling
 
-  //Cast the rays
-  if(player1Present)
-  {
-    RC_CastRays(&camera1,&myWorld);
-  }
-  if(player2Present)
-  {
-    RC_CastRays(&camera2,&myWorld);
-  }
-  //Render rays
-  uint32_t i = 0;
-  for(i = 0; i < COLUMNS; i++)
-  {
-    renderWall(camera1.rayArray[i],i,1);
-    renderWall(camera2.rayArray[i],i,2);
-  }
-
-  //Render and occlude enemies and items
-  for(i = 0; i<N_ENEMIES; i++)
-  {
-    fixed32_3 dX = enemyI.entityData.pos.x - camera1.pos.x;  //The entity relative to camera
-    fixed32_3 dY = enemyI.entityData.pos.y - camera1.pos.y;  //
-    uint8_t left = 0;
-    uint8_t right = 0; //determines if angle is to
-    fixed32_3 angleOff = atan2Fix(dX,dY)- camera1.direction;
-    if(angleOff < 0)
+    //Cast the rays
+    if(player1Present)
     {
-      left = 1; //off to the left
+        RC_CastRays(&camera1,&myWorld);
     }
-    else if (angleOff >0)
+    if(player2Present)
     {
-      right = 1;
+        RC_CastRays(&camera2,&myWorld);
     }
-    //normalizeAngleFixPtr(&angleOff);  //If angleOff < FOV/2 or angleOff > 360000 - FOV/2
-    angleOff = abs(angleOff);
-    fixed32_3 distance = sqrtFix(dX * dX /1000 + dY * dY/1000);
-    int32_t xOff;
-    if(left)
+    //Render rays
+    uint32_t i = 0;
+    for(i = 0; i < COLUMNS; i++)
     {
-      xOff  = 80 - angleOff/500;
-    }
-    else if (right)
-    {
-      xOff  = 80 + angleOff/500;
-    }
-    else
-    {
-      xOff = 80;
-    }
-    int32_t yOff = 45;
-    ufixed32_3 scale = 30000000/distance/3;
-    scale = scale>10000?10000:scale;
-    uint16_t spriteNum;
-    if(enemyI.active)
-    {
-      uint8_t temp = Random()%2;
-      switch(enemyI.weapon.state)
-      {
-        case READY:
-          spriteNum = temp==0?enemyI.data->frame1:enemyI.data->frame2;
-          break;
-        case ATTACK:
-          spriteNum = enemyI.data->frameAttackl;
-          break;
-        case RELOAD:
-          spriteNum = temp==0?enemyI.data->frame1:enemyI.data->frame2;
-          break;
-      }
-    }
-    else
-    {
-      spriteNum = enemyI.data->frameDeath;
+        renderWall(camera1.rayArray[i],i,1);
+        renderWall(camera2.rayArray[i],i,2);
     }
 
-    if(angleOff < camera1.FOV/2 )
+    //Render and occlude enemies and items
+    for(i = 0; i<N_ENEMIES; i++)
     {
-      if(distance < (camera1.rayArray[(camera1.FOV/2-angleOff)/camera1.dAngle].distance))
-      {
-        Interface1_ScaleSpriteOver(xOff,yOff,scale,scale,spriteNum);
-      }
+        fixed32_3 dX = enemyI.entityData.pos.x - camera1.pos.x;    //The entity relative to camera
+        fixed32_3 dY = enemyI.entityData.pos.y - camera1.pos.y;    //
+        uint8_t left = 0;
+        uint8_t right = 0; //determines if angle is to
+        fixed32_3 angleOff = atan2Fix(dX,dY)- camera1.direction;
+        if(angleOff < 0)
+        {
+            left = 1; //off to the left
+        }
+        else if (angleOff >0)
+        {
+            right = 1;
+        }
+        //normalizeAngleFixPtr(&angleOff);    //If angleOff < FOV/2 or angleOff > 360000 - FOV/2
+        angleOff = abs(angleOff);
+        fixed32_3 distance = sqrtFix(dX * dX /1000 + dY * dY/1000);
+        int32_t xOff;
+        if(left)
+        {
+            xOff    = 80 - angleOff/500;
+        }
+        else if (right)
+        {
+            xOff    = 80 + angleOff/500;
+        }
+        else
+        {
+            xOff = 80;
+        }
+        int32_t yOff = 45;
+        ufixed32_3 scale = 30000000/distance/3;
+        scale = scale>10000?10000:scale;
+        uint16_t spriteNum;
+        if(enemyI.active)
+        {
+            uint8_t temp = Random()%2;
+            switch(enemyI.weapon.state)
+            {
+                case READY:
+                    spriteNum = temp==0?enemyI.data->frame1:enemyI.data->frame2;
+                    break;
+                case ATTACK:
+                    spriteNum = enemyI.data->frameAttackl;
+                    break;
+                case RELOAD:
+                    spriteNum = temp==0?enemyI.data->frame1:enemyI.data->frame2;
+                    break;
+            }
+        }
+        else
+        {
+            spriteNum = enemyI.data->frameDeath;
+        }
+
+        if(angleOff < camera1.FOV/2 )
+        {
+            if(distance < (camera1.rayArray[(camera1.FOV/2-angleOff)/camera1.dAngle].distance))
+            {
+                Interface1_ScaleSpriteOver(xOff,yOff,scale,scale,spriteNum);
+            }
+        }
     }
-  }
 
 
 
-  //Draw weapons
-  if(player1.active)
-  {
-    switch(player1.weapons[player1.activeWeapon].state)
+    //Draw weapons
+    if(player1.active)
     {
-      case READY:
-        Interface_ScaleSpriteOver(&interfaceList[0], 120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<6)/256,1000,1000,player1.weapons[player1.activeWeapon].data->readySprite);
-        break;
-      case ATTACK:
-        Interface_ScaleSpriteOver(&interfaceList[0],120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<8)/256,1000,1000,player1.weapons[player1.activeWeapon].data->fireSprite);
-        break;
-      case RELOAD:
-        break;
+        switch(player1.weapons[player1.activeWeapon].state)
+        {
+            case READY:
+                Interface_ScaleSpriteOver(&interfaceList[0], 120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<6)/256,1000,1000,player1.weapons[player1.activeWeapon].data->readySprite);
+                break;
+            case ATTACK:
+                Interface_ScaleSpriteOver(&interfaceList[0],120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<8)/256,1000,1000,player1.weapons[player1.activeWeapon].data->fireSprite);
+                break;
+            case RELOAD:
+                break;
+        }
+        uint16_t crossIndex = 0;
+        switch(player1.weapons[player1.activeWeapon].data->type)
+        {
+            case MELEE:
+                crossIndex = CROSS_SHOTGUN;
+                break;
+            case HANDGUN:
+                crossIndex = CROSS_PISTOL;
+                break;
+            case SHOTGUN:
+                crossIndex = CROSS_SHOTGUN;
+                break;
+            case RIFLE:
+                crossIndex = CROSS_RIFLE;
+                break;
+        }
+        Interface_ScaleSpriteOver(&interfaceList[0],80,45,1000,1000,crossIndex);
     }
-    uint16_t crossIndex = 0;
-    switch(player1.weapons[player1.activeWeapon].data->type)
+
+
+    Interface_DrawBuffer(&interfaceList[0]);
+    //Interface2_DrawBuffer();
+
+    Interface_LCDFillRect(&interfaceList[0],0,90,160,38,0x0000);
+    //Interface1_LCDFillRect(0,100,80*player1.health/MAX_HEALTH,10,ST7735_Color565(255,0,0));
+    if(player1.active)
     {
-      case MELEE:
-        crossIndex = CROSS_SHOTGUN;
-        break;
-      case HANDGUN:
-        crossIndex = CROSS_PISTOL;
-        break;
-      case SHOTGUN:
-        crossIndex = CROSS_SHOTGUN;
-        break;
-      case RIFLE:
-        crossIndex = CROSS_RIFLE;
-        break;
+        //Draw black rectangle
+        Interface_LCDFillRect(&interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,ST7735_Color565(255,0,0));
+        //Draw Ammo
+        Interface_SetCursor(&interfaceList[0],1,10);
+        Interface_OutString(&interfaceList[0],(uint8_t*)player1.weapons[player1.activeWeapon].data->name);
+        if(player1.weapons[player1.activeWeapon].data->type!=MELEE && player1.active)
+        {
+            Interface_SetCursor(&interfaceList[0],1,11);
+            uint32_t ammoCount;
+            switch(player1.weapons[player1.activeWeapon].data->type)
+            {
+                case MELEE:
+                    break;
+                case HANDGUN:
+                    ammoCount = player1.pistolAmmo;
+                    break;
+                case SHOTGUN:
+                    ammoCount = player1.shotgunAmmo;
+                    break;
+                case RIFLE:
+                    ammoCount = player1.rifleAmmo;
+                    break;
+            }
+            sprintf(str,"%d/%d",player1.weapons[player1.activeWeapon].magCur,ammoCount);
+            Interface_OutString(&interfaceList[0],str);
+        }
     }
-    Interface_ScaleSpriteOver(&interfaceList[0],80,45,1000,1000,crossIndex);
-  }
 
-
-  Interface_DrawBuffer(&interfaceList[0]);
-  //Interface2_DrawBuffer();
-
-  Interface_LCDFillRect(&interfaceList[0],0,90,160,38,0x0000);
-  //Interface1_LCDFillRect(0,100,80*player1.health/MAX_HEALTH,10,ST7735_Color565(255,0,0));
-  if(player1.active)
-  {
-    //Draw black rectangle
-    Interface_LCDFillRect(&interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,ST7735_Color565(255,0,0));
-    //Draw Ammo
-    Interface_SetCursor(&interfaceList[0],1,10);
-    Interface_OutString(&interfaceList[0],(uint8_t*)player1.weapons[player1.activeWeapon].data->name);
-    if(player1.weapons[player1.activeWeapon].data->type!=MELEE && player1.active)
+    if(!player1.active)
     {
-      Interface_SetCursor(&interfaceList[0],1,11);
-      uint32_t ammoCount;
-      switch(player1.weapons[player1.activeWeapon].data->type)
-      {
-        case MELEE:
-          break;
-        case HANDGUN:
-          ammoCount = player1.pistolAmmo;
-          break;
-        case SHOTGUN:
-          ammoCount = player1.shotgunAmmo;
-          break;
-        case RIFLE:
-          ammoCount = player1.rifleAmmo;
-          break;
-      }
-      sprintf(str,"%d/%d",player1.weapons[player1.activeWeapon].magCur,ammoCount);
-      Interface_OutString(&interfaceList[0],str);
+
+        Interface_SetCursor(&interfaceList[0],0,9);
+        Interface_OutString(&interfaceList[0],"You're dead...");
+        Interface_SetCursor(&interfaceList[0],0,10);
+        sprintf(str,"Kills: %d",player1.kills);
+        Interface_OutString(&interfaceList[0],str);
+        Interface_SetCursor(&interfaceList[0],0,11);
+        sprintf(str,"Time: %d seconds",player1Timer/1000);
+        Interface_OutString(&interfaceList[0],str);
+        Interface_SetCursor(&interfaceList[0],0,12);
+        sprintf(str,"Score: %d",player1Timer/100 + player1.kills * 10 + bossKills * 1000);
+        Interface_OutString(&interfaceList[0],str);
+
     }
-  }
+    //Interface1_LCDFillRect(160-(80*player1.health/MAX_HEALTH),100,80-80*player1.health/MAX_HEALTH,10,0xFFFF);
 
-  if(!player1.active)
-  {
-
-    Interface_SetCursor(&interfaceList[0],0,9);
-    Interface_OutString(&interfaceList[0],"You're dead...");
-    Interface_SetCursor(&interfaceList[0],0,10);
-    sprintf(str,"Kills: %d",player1.kills);
-    Interface_OutString(&interfaceList[0],str);
-    Interface_SetCursor(&interfaceList[0],0,11);
-    sprintf(str,"Time: %d seconds",player1Timer/1000);
-    Interface_OutString(&interfaceList[0],str);
-    Interface_SetCursor(&interfaceList[0],0,12);
-    sprintf(str,"Score: %d",player1Timer/100 + player1.kills * 10 + bossKills * 1000);
-    Interface_OutString(&interfaceList[0],str);
-
-  }
-  //Interface1_LCDFillRect(160-(80*player1.health/MAX_HEALTH),100,80-80*player1.health/MAX_HEALTH,10,0xFFFF);
-
-  /*
-  Interface1_LCDSetCursor(0,11);
-  sprintf(str,"vX: %d",player1.entityData.vel.x);
-  Interface1_LCDOutString(str);
-  Interface1_LCDSetCursor(0,12);
-  sprintf(str,"vY: %d",player1.entityData.vel.y);
-  Interface1_LCDOutString(str);
-  */
+    /*
+    Interface1_LCDSetCursor(0,11);
+    sprintf(str,"vX: %d",player1.entityData.vel.x);
+    Interface1_LCDOutString(str);
+    Interface1_LCDSetCursor(0,12);
+    sprintf(str,"vY: %d",player1.entityData.vel.y);
+    Interface1_LCDOutString(str);
+    */
 }
 void initWeapon(weapon* wpn, const weaponData* data)
 {
-  wpn->data = data;
-  wpn->fireTimer = 0;
-  wpn->magCur = data->magCap;
-  wpn->reloadTimer = 0;
-  wpn->state = READY;
+    wpn->data = data;
+    wpn->fireTimer = 0;
+    wpn->magCur = data->magCap;
+    wpn->reloadTimer = 0;
+    wpn->state = READY;
 }
 
 void spawnEnemy(fixed32_3 x, fixed32_3 y,uint8_t index)
 {
-  uint32_t i = 0;
-  uint8_t found = 0;
-  for(i=0;i<N_ENEMIES && !found;i++)
-  {
-    if(!enemyI.active)
+    uint32_t i = 0;
+    uint8_t found = 0;
+    for(i=0;i<N_ENEMIES && !found;i++)
     {
-        enemyI.active = 1;
-        enemyI.ai.AIType = CLOSE;
-        enemyI.ai.target = &player1;
-        //enemyI.data = &emy_zombie1;
-        enemyI.data = enemyPresets[index];
-        enemyI.health = enemyI.data->maxHealth;
-        enemyI.entityData.pos.x = x;
-        enemyI.entityData.pos.y = y;
-        enemyI.entityData.pos.z = 1000;
-        enemyI.entityData.dim.depth = 1000;
-        enemyI.entityData.dim.width = 1000;
-        enemyI.entityData.dim.height = 2000;
-        initWeapon(&enemyI.weapon,enemyPresets[index]->weapondata);
-        found = 1;
+        if(!enemyI.active)
+        {
+                enemyI.active = 1;
+                enemyI.ai.AIType = CLOSE;
+                enemyI.ai.target = &player1;
+                //enemyI.data = &emy_zombie1;
+                enemyI.data = enemyPresets[index];
+                enemyI.health = enemyI.data->maxHealth;
+                enemyI.entityData.pos.x = x;
+                enemyI.entityData.pos.y = y;
+                enemyI.entityData.pos.z = 1000;
+                enemyI.entityData.dim.depth = 1000;
+                enemyI.entityData.dim.width = 1000;
+                enemyI.entityData.dim.height = 2000;
+                initWeapon(&enemyI.weapon,enemyPresets[index]->weapondata);
+                found = 1;
+        }
     }
-  }
 }
 
 void spawnEnemyRandom(uint8_t index)
 {
-  vector pos = {0,0,0};
-  uint32_t i = 0;
-  uint8_t found = 0;
-  for(i=0;i<N_ENEMIES && !found;i++)
-  {
-    if(!enemyI.active)  //Empty enemy spot
+    vector pos = {0,0,0};
+    uint32_t i = 0;
+    uint8_t found = 0;
+    for(i=0;i<N_ENEMIES && !found;i++)
     {
-      while((getTile(pos.x,pos.y)&0x10) || (getDistance2D(&pos,&player1.entityData.pos) < 10000))//Make sure zombie isn't in a wall or too close to player
-      {
-        pos.x = Random32()%1000 * W_WIDTH;    //Keep getting a new coordinate
-        pos.y = Random32()%1000 * W_HEIGHT;
-      }
-      spawnEnemy(pos.x,pos.y,index);
-      found = 1;
-      /*
-      enemyI.active = 1;
-      enemyI.ai.AIType = CLOSE;
-      enemyI.ai.target = &player1;
-      enemyI.data = &emy_zombie1;
-      enemyI.health = enemyI.data->maxHealth;
-      enemyI.entityData.pos.x = x;
-      enemyI.entityData.pos.y = y;
-      enemyI.entityData.pos.z = 1000;
-      enemyI.entityData.dim.depth = 1000;
-      enemyI.entityData.dim.width = 1000;
-      enemyI.entityData.dim.height = 2000;
-      initWeapon(&enemyI.weapon,&wpn_zombie1);
-      found = 1;
-      */
+        if(!enemyI.active)    //Empty enemy spot
+        {
+            while((getTile(pos.x,pos.y)&0x10) || (getDistance2D(&pos,&player1.entityData.pos) < 10000))//Make sure zombie isn't in a wall or too close to player
+            {
+                pos.x = Random32()%1000 * W_WIDTH;        //Keep getting a new coordinate
+                pos.y = Random32()%1000 * W_HEIGHT;
+            }
+            spawnEnemy(pos.x,pos.y,index);
+            found = 1;
+            /*
+            enemyI.active = 1;
+            enemyI.ai.AIType = CLOSE;
+            enemyI.ai.target = &player1;
+            enemyI.data = &emy_zombie1;
+            enemyI.health = enemyI.data->maxHealth;
+            enemyI.entityData.pos.x = x;
+            enemyI.entityData.pos.y = y;
+            enemyI.entityData.pos.z = 1000;
+            enemyI.entityData.dim.depth = 1000;
+            enemyI.entityData.dim.width = 1000;
+            enemyI.entityData.dim.height = 2000;
+            initWeapon(&enemyI.weapon,&wpn_zombie1);
+            found = 1;
+            */
+        }
     }
-  }
 }
 
 
 void spawnProjectile(weapon* wpnPtr,player* owner)
 {
-  uint32_t i = 0;
-  uint8_t found = 0;
-  for(i=0;i<N_PROJECTILES && !found;i++)
-  {
-    if(!projI.active)
+    uint32_t i = 0;
+    uint8_t found = 0;
+    for(i=0;i<N_PROJECTILES && !found;i++)
     {
-      PF_EOR(3);
-      fixed32_3 angleOff = mul32_3(Random32()%1000,wpnPtr->data->dispersion/2);
-      angleOff *= Random()&1?1:-1;
-      fixed32_3 angle = owner->entityData.rot + angleOff;  //Get a dispersion angle
-      projI.active = 1;                     //Activate this projectile
-      projI.damage = wpnPtr->data->damage;
-      projI.entityData.vel = polarToVector(wpnPtr->data->velocity,angle);
-      projI.entityData.pos = owner->entityData.pos; //Starts at playe
-      projI.entityData.dim.depth = 100;
-      projI.entityData.dim.height = 100;
-      projI.entityData.dim.width = 100;
-      projI.entityData.acc.z = - 1000;
-      projI.owner = owner;                          //Player owns this projectile
-      found = 1;
+        if(!projI.active)
+        {
+            PF_EOR(3);
+            fixed32_3 angleOff = mul32_3(Random32()%1000,wpnPtr->data->dispersion/2);
+            angleOff *= Random()&1?1:-1;
+            fixed32_3 angle = owner->entityData.rot + angleOff;    //Get a dispersion angle
+            projI.active = 1;                                         //Activate this projectile
+            projI.damage = wpnPtr->data->damage;
+            projI.entityData.vel = polarToVector(wpnPtr->data->velocity,angle);
+            projI.entityData.pos = owner->entityData.pos; //Starts at playe
+            projI.entityData.dim.depth = 100;
+            projI.entityData.dim.height = 100;
+            projI.entityData.dim.width = 100;
+            projI.entityData.acc.z = - 1000;
+            projI.owner = owner;    //Player owns this projectile
+            found = 1;
+        }
     }
-  }
 }
 
 uint32_t directorTimeout = 10000;
 void actDirector(void)
 {
-  if(directorTimer3>= 120000)
-  {
-    Music_PlaySound(SND_SKELTAL);
-    spawnEnemyRandom(2);
-    directorTimer3 = 0;
-  }
-  else if(directorTimer1>=directorTimeout)
-  {
-    if(gameTimer >= 60000)
+    if(directorTimer3>= 120000)
     {
-      spawnEnemyRandom(1);
+        Music_PlaySound(SND_SKELTAL);
+        spawnEnemyRandom(2);
+        directorTimer3 = 0;
     }
-    else
+    else if(directorTimer1>=directorTimeout)
     {
-      spawnEnemyRandom(0);
+        if(gameTimer >= 60000)
+        {
+            spawnEnemyRandom(1);
+        }
+        else
+        {
+            spawnEnemyRandom(0);
+        }
+        PF_EOR(3);
+        directorTimer1 = 0;
     }
-    PF_EOR(3);
-    directorTimer1 = 0;
-  }
-  if(directorTimer2>=90000)
-  {
-    Music_PlaySound(SND_HELO);
-    directorTimer2 = 0;
-    player1.pistolAmmo += 60;
-    player1.shotgunAmmo += 12;
-    player1.rifleAmmo += 30;
-  }
-  switch(directorTimeout)
-  {
-    case 10000:
-      directorTimeout -= bossKills>0?2000:0;
-      break;
-    case 8000:
-      directorTimeout -= bossKills>1?2000:0;
-      break;
-    case 6000:
-      directorTimeout -= bossKills>2?2000:0;
-      break;
-  }
+    if(directorTimer2>=90000)
+    {
+        Music_PlaySound(SND_HELO);
+        directorTimer2 = 0;
+        player1.pistolAmmo += 60;
+        player1.shotgunAmmo += 12;
+        player1.rifleAmmo += 30;
+    }
+    switch(directorTimeout)
+    {
+        case 10000:
+            directorTimeout -= bossKills>0?2000:0;
+            break;
+        case 8000:
+            directorTimeout -= bossKills>1?2000:0;
+            break;
+        case 6000:
+            directorTimeout -= bossKills>2?2000:0;
+            break;
+    }
 
 }
 
 void actIntelligence(fixed32_3 dT)
 {
-  uint32_t i = 0;
-  weapon* wpnPtr;
-  fixed32_3 distance;
-  if(player1Present && player1.active)
-  {
-    player1.paces += (1 + mul32_3(Interface_GetAnalog(&interfaceList[0],'y'),player1.speed)/2) * dT/1000;
-    if(Interface_GetDigital(&interfaceList[0],'l'))
+    uint32_t i = 0;
+    weapon* wpnPtr;
+    fixed32_3 distance;
+    if(player1Present && player1.active)
     {
-      player1.entityData.rot += Interface_GetAnalog(&interfaceList[0],'x')*dT/100;
-    }
-    else
-    {
-      player1.entityData.rot += Interface_GetAnalog(&interfaceList[0],'x')*dT/25;
-      player1.entityData.vel = polarToVector(mul32_3(Interface_GetAnalog(&interfaceList[0],'y'),player1.speed),player1.entityData.rot);
-    }
-    if(Interface_GetDigital(&interfaceList[0],'x'))
-    {
-      //myCamera.pos.x += mul32_3(1000,cosineFix(myCamera.direction-90000));
-      player1.entityData.vel.x += mul32_3(player1.speed,cosineFix(player1.entityData.rot - 90000))*dT/100;
-      player1.entityData.vel.y += mul32_3(player1.speed,sineFix(player1.entityData.rot - 90000))*dT/100;
-    }
-    if(Interface_GetDigital(&interfaceList[0],'b'))
-    {
-      player1.entityData.vel.x += mul32_3(player1.speed,cosineFix(player1.entityData.rot + 90000))*dT/100;
-      player1.entityData.vel.y += mul32_3(player1.speed,sineFix(player1.entityData.rot + 90000))*dT/100;
-    }
-    if(Interface_GetDigital(&interfaceList[0],'r'))
-    {
-      wpnPtr = &player1.weapons[player1.activeWeapon];
-      if((digitalHold1&HOLD_R) == 0 || wpnPtr->data->fire == AUTO)
-      {
-        if(wpnPtr->state == READY)
+        player1.paces += (1 + mul32_3(Interface_GetAnalog(&interfaceList[0],'y'),player1.speed)/2) * dT/1000;
+        if(Interface_GetDigital(&interfaceList[0],'l'))
         {
-          if(wpnPtr->data->type == MELEE)
-          {
-            wpnPtr->state = ATTACK;
-            wpnPtr->fireTimer = 0;
-            Music_PlaySound(wpnPtr->data->soundIndex);
-            for(i = 0; i<N_ENEMIES;i++)
-            {
-              if(enemyI.active)
-              {
-                distance = getDistance2D(&player1.entityData.pos,&enemyI.entityData.pos);
-                if(distance <= wpnPtr->data->range)
-                {
-                  PF_EOR(3);
-                  enemyI.health -= wpnPtr->data->damage;
-                  if(enemyI.health<0)
-                  {
-                    Music_PlaySound(SND_ZOMBIEDIE);
-                    enemyI.active = 0;
-                    player1.kills++;
-                  }
-                }
-              }
-            }
-          }
-          else
-          {
-            if(wpnPtr->magCur>0)
-            {
-              Music_PlaySound(wpnPtr->data->soundIndex);
-              wpnPtr->state = ATTACK;
-              wpnPtr->fireTimer = 0;
-              wpnPtr->fireTimer = 0;
-              wpnPtr->magCur -= 1;
-              if(wpnPtr->data->type == SHOTGUN)
-              {
-                spawnProjectile(wpnPtr,&player1);
-                spawnProjectile(wpnPtr,&player1);
-                spawnProjectile(wpnPtr,&player1);
-                spawnProjectile(wpnPtr,&player1);
-                spawnProjectile(wpnPtr,&player1);
-                spawnProjectile(wpnPtr,&player1);
-              }
-              spawnProjectile(wpnPtr,&player1);
-            }
-            else
-            {
-              Music_PlaySound(SND_GUNEMPTY);
-            }
-          }
-        }
-        digitalHold1 |= HOLD_R;
-      }
-    }
-    else
-    {
-      digitalHold1 &= ~(digitalHold1&HOLD_R);
-    }
-    if(Interface_GetDigital(&interfaceList[0],'a'))
-    {
-        wpnPtr = &player1.weapons[player1.activeWeapon];
-        if(wpnPtr->state == READY)
-        {
-          if(wpnPtr->magCur < wpnPtr->data->magCap)
-          {
-            wpnPtr->reloadTimer = 0;
-            if(wpnPtr->data->type == HANDGUN && player1.pistolAmmo > 0)
-            {
-              Music_PlaySound(SND_GUNMAG);
-              wpnPtr->state = RELOAD;
-            }
-            else if(wpnPtr->data->type == SHOTGUN && player1.shotgunAmmo > 0)
-            {
-              Music_PlaySound(SND_GUNMAG);
-              wpnPtr->state = RELOAD;
-            }
-            else if(wpnPtr->data->type == RIFLE && player1.rifleAmmo > 0)
-            {
-              Music_PlaySound(SND_GUNMAG);
-              wpnPtr->state = RELOAD;
-            }
-          }
-        }
-    }
-    if(Interface_GetDigital(&interfaceList[0],'y'))
-    {
-      if(!(digitalHold1&HOLD_Y))
-      {
-        player1.activeWeapon = (player1.activeWeapon + 1)%4;
-        digitalHold1 |= HOLD_Y;
-      }
-    }
-    else
-    {
-      digitalHold1 &= ~(digitalHold1&HOLD_Y);
-    }
-  }
-
-  //Enemy AI
-  fixed32_3 player1Dist;
-  fixed32_3 player2Dist;
-  fixed32_3 dX;
-  fixed32_3 dY;
-  for(i = 0; i<N_ENEMIES;i++)
-  {
-    if(enemyI.active)
-    {
-      if(enemyI.ai.AIType == CLOSE)
-      {
-        //Pick target
-        if(player1.active)
-        {
-          /*
-          dX = player1.entityData.pos.x - enemyI.entityData.pos.x;
-          dY = player1.entityData.pos.y - enemyI.entityData.pos.y;
-          player1Dist = sqrtFix(dX * dX + dY * dY);
-          */
-          player1Dist = getDistance(&player1.entityData.pos,&enemyI.entityData.pos);
-        }
-        if(player2.active)
-        {
-          /*
-          dX = player2.entityData.pos.x - enemyI.entityData.pos.x;
-          dY = player2.entityData.pos.y - enemyI.entityData.pos.y;
-          player2Dist = sqrtFix(dX * dX + dY * dY);
-          */
-          player2Dist = getDistance(&player2.entityData.pos,&enemyI.entityData.pos);
-        }
-        if(player1.active && player2.active)
-        {
-          if(player1Dist < player2Dist)
-          {
-            enemyI.ai.target = player1.active?&player1:&player2;
-          }
-          else
-          {
-            enemyI.ai.target = player2.active?&player2:&player1;
-          }
-        }
-        else if(player1.active)
-        {
-          enemyI.ai.target = &player1;
+            player1.entityData.rot += Interface_GetAnalog(&interfaceList[0],'x')*dT/100;
         }
         else
         {
-          enemyI.ai.target = &player2;
+            player1.entityData.rot += Interface_GetAnalog(&interfaceList[0],'x')*dT/25;
+            player1.entityData.vel = polarToVector(mul32_3(Interface_GetAnalog(&interfaceList[0],'y'),player1.speed),player1.entityData.rot);
         }
-
-        //Change direction to target
-        enemyI.entityData.rot = angleRel(&enemyI.entityData.pos,&enemyI.ai.target->entityData.pos);
-        enemyI.entityData.vel = polarToVector(enemyI.data->speed,enemyI.entityData.rot); //Set velocity vector to go to this
-
-        //Attack
-        if(enemyI.weapon.state == READY)
+        if(Interface_GetDigital(&interfaceList[0],'x'))
         {
-          if(enemyI.ai.target == &player1)
-          {
-            if(player1.active)
-            {
-              if(player1Dist <= enemyI.weapon.data->range)
-              {
-                Music_PlaySound(enemyI.weapon.data->soundIndex);
-                enemyI.weapon.state = ATTACK;
-                enemyI.weapon.fireTimer = 0;
-                player1.health -= enemyI.weapon.data->damage; //Take damage
-                if(player1.health <= 0)
-                {
-                  player1.active = 0; //Player is deed
-                }
-                Interface1_LCDFillRect(0,0,160,30,ST7735_Color565(255,17,45));
-                //Interface1_LCDFillRect(0,30,160,30,ST7735_Color565(255,17,45));
-                //Interface1_LCDFillRect(0,60,160,30,ST7735_Color565(255,17,45));
-              }
-            }
-          }
-          else
-          {
-            if(player2.active)
-            {
-              if(player2Dist <= enemyI.weapon.data->range)
-              {
-                enemyI.weapon.fireTimer = 0;
-                player2.health -= enemyI.weapon.data->damage; //Take damage
-                if(player2.health <= 0)
-                {
-                  player2.active = 0; //Player is deed
-                }
-              }
-            }
-          }
+            //myCamera.pos.x += mul32_3(1000,cosineFix(myCamera.direction-90000));
+            player1.entityData.vel.x += mul32_3(player1.speed,cosineFix(player1.entityData.rot - 90000))*dT/100;
+            player1.entityData.vel.y += mul32_3(player1.speed,sineFix(player1.entityData.rot - 90000))*dT/100;
         }
-
-      }
+        if(Interface_GetDigital(&interfaceList[0],'b'))
+        {
+            player1.entityData.vel.x += mul32_3(player1.speed,cosineFix(player1.entityData.rot + 90000))*dT/100;
+            player1.entityData.vel.y += mul32_3(player1.speed,sineFix(player1.entityData.rot + 90000))*dT/100;
+        }
+        if(Interface_GetDigital(&interfaceList[0],'r'))
+        {
+            wpnPtr = &player1.weapons[player1.activeWeapon];
+            if((digitalHold1&HOLD_R) == 0 || wpnPtr->data->fire == AUTO)
+            {
+                if(wpnPtr->state == READY)
+                {
+                    if(wpnPtr->data->type == MELEE)
+                    {
+                        wpnPtr->state = ATTACK;
+                        wpnPtr->fireTimer = 0;
+                        Music_PlaySound(wpnPtr->data->soundIndex);
+                        for(i = 0; i<N_ENEMIES;i++)
+                        {
+                            if(enemyI.active)
+                            {
+                                distance = getDistance2D(&player1.entityData.pos,&enemyI.entityData.pos);
+                                if(distance <= wpnPtr->data->range)
+                                {
+                                    PF_EOR(3);
+                                    enemyI.health -= wpnPtr->data->damage;
+                                    if(enemyI.health<0)
+                                    {
+                                        Music_PlaySound(SND_ZOMBIEDIE);
+                                        enemyI.active = 0;
+                                        player1.kills++;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(wpnPtr->magCur>0)
+                        {
+                            Music_PlaySound(wpnPtr->data->soundIndex);
+                            wpnPtr->state = ATTACK;
+                            wpnPtr->fireTimer = 0;
+                            wpnPtr->fireTimer = 0;
+                            wpnPtr->magCur -= 1;
+                            if(wpnPtr->data->type == SHOTGUN)
+                            {
+                                spawnProjectile(wpnPtr,&player1);
+                                spawnProjectile(wpnPtr,&player1);
+                                spawnProjectile(wpnPtr,&player1);
+                                spawnProjectile(wpnPtr,&player1);
+                                spawnProjectile(wpnPtr,&player1);
+                                spawnProjectile(wpnPtr,&player1);
+                            }
+                            spawnProjectile(wpnPtr,&player1);
+                        }
+                        else
+                        {
+                            Music_PlaySound(SND_GUNEMPTY);
+                        }
+                    }
+                }
+                digitalHold1 |= HOLD_R;
+            }
+        }
+        else
+        {
+            digitalHold1 &= ~(digitalHold1&HOLD_R);
+        }
+        if(Interface_GetDigital(&interfaceList[0],'a'))
+        {
+                wpnPtr = &player1.weapons[player1.activeWeapon];
+                if(wpnPtr->state == READY)
+                {
+                    if(wpnPtr->magCur < wpnPtr->data->magCap)
+                    {
+                        wpnPtr->reloadTimer = 0;
+                        if(wpnPtr->data->type == HANDGUN && player1.pistolAmmo > 0)
+                        {
+                            Music_PlaySound(SND_GUNMAG);
+                            wpnPtr->state = RELOAD;
+                        }
+                        else if(wpnPtr->data->type == SHOTGUN && player1.shotgunAmmo > 0)
+                        {
+                            Music_PlaySound(SND_GUNMAG);
+                            wpnPtr->state = RELOAD;
+                        }
+                        else if(wpnPtr->data->type == RIFLE && player1.rifleAmmo > 0)
+                        {
+                            Music_PlaySound(SND_GUNMAG);
+                            wpnPtr->state = RELOAD;
+                        }
+                    }
+                }
+        }
+        if(Interface_GetDigital(&interfaceList[0],'y'))
+        {
+            if(!(digitalHold1&HOLD_Y))
+            {
+                player1.activeWeapon = (player1.activeWeapon + 1)%4;
+                digitalHold1 |= HOLD_Y;
+            }
+        }
+        else
+        {
+            digitalHold1 &= ~(digitalHold1&HOLD_Y);
+        }
     }
-  }
+
+    //Enemy AI
+    fixed32_3 player1Dist;
+    fixed32_3 player2Dist;
+    fixed32_3 dX;
+    fixed32_3 dY;
+    for(i = 0; i<N_ENEMIES;i++)
+    {
+        if(enemyI.active)
+        {
+            if(enemyI.ai.AIType == CLOSE)
+            {
+                //Pick target
+                if(player1.active)
+                {
+                    /*
+                    dX = player1.entityData.pos.x - enemyI.entityData.pos.x;
+                    dY = player1.entityData.pos.y - enemyI.entityData.pos.y;
+                    player1Dist = sqrtFix(dX * dX + dY * dY);
+                    */
+                    player1Dist = getDistance(&player1.entityData.pos,&enemyI.entityData.pos);
+                }
+                if(player2.active)
+                {
+                    /*
+                    dX = player2.entityData.pos.x - enemyI.entityData.pos.x;
+                    dY = player2.entityData.pos.y - enemyI.entityData.pos.y;
+                    player2Dist = sqrtFix(dX * dX + dY * dY);
+                    */
+                    player2Dist = getDistance(&player2.entityData.pos,&enemyI.entityData.pos);
+                }
+                if(player1.active && player2.active)
+                {
+                    if(player1Dist < player2Dist)
+                    {
+                        enemyI.ai.target = player1.active?&player1:&player2;
+                    }
+                    else
+                    {
+                        enemyI.ai.target = player2.active?&player2:&player1;
+                    }
+                }
+                else if(player1.active)
+                {
+                    enemyI.ai.target = &player1;
+                }
+                else
+                {
+                    enemyI.ai.target = &player2;
+                }
+
+                //Change direction to target
+                enemyI.entityData.rot = angleRel(&enemyI.entityData.pos,&enemyI.ai.target->entityData.pos);
+                enemyI.entityData.vel = polarToVector(enemyI.data->speed,enemyI.entityData.rot); //Set velocity vector to go to this
+
+                //Attack
+                if(enemyI.weapon.state == READY)
+                {
+                    if(enemyI.ai.target == &player1)
+                    {
+                        if(player1.active)
+                        {
+                            if(player1Dist <= enemyI.weapon.data->range)
+                            {
+                                Music_PlaySound(enemyI.weapon.data->soundIndex);
+                                enemyI.weapon.state = ATTACK;
+                                enemyI.weapon.fireTimer = 0;
+                                player1.health -= enemyI.weapon.data->damage; //Take damage
+                                if(player1.health <= 0)
+                                {
+                                    player1.active = 0; //Player is deed
+                                }
+                                Interface1_LCDFillRect(0,0,160,30,ST7735_Color565(255,17,45));
+                                //Interface1_LCDFillRect(0,30,160,30,ST7735_Color565(255,17,45));
+                                //Interface1_LCDFillRect(0,60,160,30,ST7735_Color565(255,17,45));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(player2.active)
+                        {
+                            if(player2Dist <= enemyI.weapon.data->range)
+                            {
+                                enemyI.weapon.fireTimer = 0;
+                                player2.health -= enemyI.weapon.data->damage; //Take damage
+                                if(player2.health <= 0)
+                                {
+                                    player2.active = 0; //Player is deed
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 void actWorld(void)
 {
-  //Random_Init(SysTick_Current); //New seed
-  player1DrawFlag = 0;  //Disable drawing
-  player2DrawFlag = 0;
+    //Random_Init(SysTick_Current); //New seed
+    player1DrawFlag = 0;    //Disable drawing
+    player2DrawFlag = 0;
 
-  ufixed32_3 dT = physicsTimer;
-  physicsTimer = 0;               //Acknowledge the physics timer; reset it
-  uint32_t i,j = 0;
-  weapon* wpnPtr;
-  player* playerPtr;
-  actDirector();
-  actIntelligence(dT);
-  normalizeAngleFixPtr(&player1.entityData.rot);
-  normalizeAngleFixPtr(&player2.entityData.rot);
-  //Update positions
-  if(player1.active)
-  {
-    PH_EntityAct(&(player1.entityData),dT);
-  }
-  if(player2.active)
-  {
-    PH_EntityAct(&(player2.entityData),dT);
-  }
-
-  //Fire rate and reload timers
-  wpnPtr = &player1.weapons[player1.activeWeapon];
-  playerPtr = &player1;
-  if(wpnPtr->fireTimer < wpnPtr->data->fireRate && wpnPtr->state == ATTACK)
-  {
-    wpnPtr->fireTimer += dT;
-    if(wpnPtr->fireTimer >= wpnPtr->data->fireRate)
+    ufixed32_3 dT = physicsTimer;
+    physicsTimer = 0;                             //Acknowledge the physics timer; reset it
+    uint32_t i,j = 0;
+    weapon* wpnPtr;
+    player* playerPtr;
+    actDirector();
+    actIntelligence(dT);
+    normalizeAngleFixPtr(&player1.entityData.rot);
+    normalizeAngleFixPtr(&player2.entityData.rot);
+    //Update positions
+    if(player1.active)
     {
-      wpnPtr->state = READY;
+        PH_EntityAct(&(player1.entityData),dT);
     }
-  }
-  if(wpnPtr->reloadTimer < wpnPtr->data->reloadSpeed && wpnPtr->state == RELOAD)
-  {
-    wpnPtr->reloadTimer += dT;
-    if(wpnPtr->reloadTimer >= wpnPtr->data->reloadSpeed)
+    if(player2.active)
     {
-      if(wpnPtr->data->type == HANDGUN)
-      {
-        playerPtr->pistolAmmo += wpnPtr->magCur;
-        if(playerPtr->pistolAmmo > wpnPtr->data->magCap)
-        {
-          wpnPtr->magCur = wpnPtr->data->magCap;
-          playerPtr->pistolAmmo -= wpnPtr->data->magCap;
-        }
-        else
-        {
-          wpnPtr->magCur = playerPtr->pistolAmmo;
-          playerPtr->pistolAmmo = 0;
-        }
-      }
-      else if(wpnPtr->data->type == SHOTGUN)
-      {
-        playerPtr->shotgunAmmo += wpnPtr->magCur;
-        if(playerPtr->shotgunAmmo > wpnPtr->data->magCap)
-        {
-          wpnPtr->magCur = wpnPtr->data->magCap;
-          playerPtr->shotgunAmmo -= wpnPtr->data->magCap;
-        }
-        else
-        {
-          wpnPtr->magCur = playerPtr->shotgunAmmo;
-          playerPtr->shotgunAmmo = 0;
-        }
-      }
-      else if(wpnPtr->data->type == RIFLE)
-      {
-        playerPtr->rifleAmmo += wpnPtr->magCur;
-        if(playerPtr->rifleAmmo > wpnPtr->data->magCap)
-        {
-          wpnPtr->magCur = wpnPtr->data->magCap;
-          playerPtr->rifleAmmo -= wpnPtr->data->magCap;
-        }
-        else
-        {
-          wpnPtr->magCur = playerPtr->rifleAmmo;
-          playerPtr->rifleAmmo = 0;
-        }
-      }
-      wpnPtr->state = READY;
-      Music_PlaySound(SND_GUNCHAMBER);
+        PH_EntityAct(&(player2.entityData),dT);
     }
-  }
 
-  wpnPtr = &player2.weapons[player2.activeWeapon];
-  playerPtr = &player2;
-  if(wpnPtr->fireTimer < wpnPtr->data->fireRate && wpnPtr->state == ATTACK)
-  {
-    wpnPtr->fireTimer += dT;
-    if(wpnPtr->fireTimer >= wpnPtr->data->fireRate)
+    //Fire rate and reload timers
+    wpnPtr = &player1.weapons[player1.activeWeapon];
+    playerPtr = &player1;
+    if(wpnPtr->fireTimer < wpnPtr->data->fireRate && wpnPtr->state == ATTACK)
     {
-      wpnPtr->state = READY;
-    }
-  }
-  if(wpnPtr->reloadTimer < wpnPtr->data->reloadSpeed && wpnPtr->state == RELOAD)
-  {
-    wpnPtr->reloadTimer += dT;
-    if(wpnPtr->reloadTimer >= wpnPtr->data->reloadSpeed)
-    {
-      if(wpnPtr->data->type == HANDGUN)
-      {
-        playerPtr->pistolAmmo += wpnPtr->magCur;
-        if(playerPtr->pistolAmmo > wpnPtr->data->magCap)
-        {
-          wpnPtr->magCur = wpnPtr->data->magCap;
-          playerPtr->pistolAmmo -= wpnPtr->data->magCap;
-        }
-        else
-        {
-          wpnPtr->magCur = playerPtr->pistolAmmo;
-          playerPtr->pistolAmmo = 0;
-        }
-      }
-      else if(wpnPtr->data->type == SHOTGUN)
-      {
-        playerPtr->shotgunAmmo += wpnPtr->magCur;
-        if(playerPtr->shotgunAmmo > wpnPtr->data->magCap)
-        {
-          wpnPtr->magCur = wpnPtr->data->magCap;
-          playerPtr->shotgunAmmo -= wpnPtr->data->magCap;
-        }
-        else
-        {
-          wpnPtr->magCur = playerPtr->shotgunAmmo;
-          playerPtr->shotgunAmmo = 0;
-        }
-      }
-      else if(wpnPtr->data->type == RIFLE)
-      {
-        playerPtr->rifleAmmo += wpnPtr->magCur;
-        if(playerPtr->rifleAmmo > wpnPtr->data->magCap)
-        {
-          wpnPtr->magCur = wpnPtr->data->magCap;
-          playerPtr->rifleAmmo -= wpnPtr->data->magCap;
-        }
-        else
-        {
-          wpnPtr->magCur = playerPtr->rifleAmmo;
-          playerPtr->rifleAmmo = 0;
-        }
-      }
-      wpnPtr->state = READY;
-      Music_PlaySound(SND_GUNCHAMBER);
-    }
-  }
-
-
-  //Enemy calculations
-  for(i = 0; i<N_ENEMIES; i++)
-  {
-    if(enemyList[i].active)
-    {
-      PH_EntityAct(&(enemyList[i].entityData),dT);  //Update position
-      wpnPtr = &enemyI.weapon;
-      if(wpnPtr->fireTimer < wpnPtr->data->fireRate && wpnPtr->state == ATTACK)
-      {
         wpnPtr->fireTimer += dT;
         if(wpnPtr->fireTimer >= wpnPtr->data->fireRate)
         {
-          wpnPtr->state = READY;
+            wpnPtr->state = READY;
         }
-      }
     }
-  }
-  //Projectile calculations
-  for(i = 0; i<N_PROJECTILES; i++)
-  {
-    if(projectileList[i].active)
+    if(wpnPtr->reloadTimer < wpnPtr->data->reloadSpeed && wpnPtr->state == RELOAD)
     {
-      PH_EntityAct(&(projectileList[i].entityData),dT);
-    }
-  }
-  //Item calculations
-  for(i = 0; i<N_ITEMS; i++)
-  {
-    if(itemList[i].active)
-    {
-      PH_EntityAct(&(itemList[i].entityData),dT);
-    }
-  }
-
-  //Collision checks
-
-  //Check for projectiles hitting enemies
-  projectile* curProj;
-  enemy* curEnemy;
-  for(i = 0; i<N_PROJECTILES; i++)
-  {
-    curProj = &projectileList[i];
-    if(curProj->entityData.pos.z <= 0)
-    {
-      curProj->active = 0;  //Check collision with ground
-    }
-    if(getTile(curProj->entityData.pos.x,curProj->entityData.pos.y)&0x10)
-    {
-      curProj->active = 0;  //Check collision with solid wall
-    }
-    if(curProj->active)
-    {
-      for(j = 0; j<N_ENEMIES; j++)
-      {
-        curEnemy = &enemyList[j];
-        if(curEnemy->active)
+        wpnPtr->reloadTimer += dT;
+        if(wpnPtr->reloadTimer >= wpnPtr->data->reloadSpeed)
         {
-          if(PH_CheckCollision(&(curProj->entityData),&(curEnemy->entityData)))
-          {
-            PF_EOR(2);
-            curEnemy->health -= curProj->damage;  //If there's a hit, enemy takes damage
-            curProj->active = 0;
-            if(curEnemy->health <= 0)
+            if(wpnPtr->data->type == HANDGUN)
             {
-              Music_PlaySound(SND_ZOMBIEDIE);
-              curEnemy->active = 0;        //If the enemy dies, deactivate it
-              curProj->owner->kills += 1;  //Increase the owner's kill score
-              if(curEnemy->data == &emy_mrskeltal)
-              {
-                bossKills++;
-                switch(bossKills)
+                playerPtr->pistolAmmo += wpnPtr->magCur;
+                if(playerPtr->pistolAmmo > wpnPtr->data->magCap)
                 {
-                  case 1:
-                    initWeapon(&player1.weapons[1],weaponPresets[WPN_GLOCK18]);
-                    break;
-                  case 2:
-                    initWeapon(&player1.weapons[2],weaponPresets[WPN_R870M]);
-                    break;
-                  case 3:
-                    initWeapon(&player1.weapons[3],weaponPresets[WPN_AR15A]);
-                    break;
+                    wpnPtr->magCur = wpnPtr->data->magCap;
+                    playerPtr->pistolAmmo -= wpnPtr->data->magCap;
                 }
-              }
+                else
+                {
+                    wpnPtr->magCur = playerPtr->pistolAmmo;
+                    playerPtr->pistolAmmo = 0;
+                }
             }
-          }
+            else if(wpnPtr->data->type == SHOTGUN)
+            {
+                playerPtr->shotgunAmmo += wpnPtr->magCur;
+                if(playerPtr->shotgunAmmo > wpnPtr->data->magCap)
+                {
+                    wpnPtr->magCur = wpnPtr->data->magCap;
+                    playerPtr->shotgunAmmo -= wpnPtr->data->magCap;
+                }
+                else
+                {
+                    wpnPtr->magCur = playerPtr->shotgunAmmo;
+                    playerPtr->shotgunAmmo = 0;
+                }
+            }
+            else if(wpnPtr->data->type == RIFLE)
+            {
+                playerPtr->rifleAmmo += wpnPtr->magCur;
+                if(playerPtr->rifleAmmo > wpnPtr->data->magCap)
+                {
+                    wpnPtr->magCur = wpnPtr->data->magCap;
+                    playerPtr->rifleAmmo -= wpnPtr->data->magCap;
+                }
+                else
+                {
+                    wpnPtr->magCur = playerPtr->rifleAmmo;
+                    playerPtr->rifleAmmo = 0;
+                }
+            }
+            wpnPtr->state = READY;
+            Music_PlaySound(SND_GUNCHAMBER);
         }
-      }
     }
-  }
 
-  for(i = 0; i<N_ITEMS; i++)
-  {
-    if(itemList[i].active)
+    wpnPtr = &player2.weapons[player2.activeWeapon];
+    playerPtr = &player2;
+    if(wpnPtr->fireTimer < wpnPtr->data->fireRate && wpnPtr->state == ATTACK)
     {
-      if(itemList[i].entityData.pos.z <= 0)
-      {
-        itemList[i].entityData.pos.z = 1000; //Hover above ground
-      }
-      if(PH_CheckCollision(&itemList[i].entityData,&player1.entityData))
-      {
-        switch(itemList[i].itemType)
+        wpnPtr->fireTimer += dT;
+        if(wpnPtr->fireTimer >= wpnPtr->data->fireRate)
         {
-          case HEALTH:
-            player1.health += itemList[i].data1;
-            player1.health = player1.health>MAX_HEALTH?MAX_HEALTH:player1.health;
-            break;
-          case FOOD:
-            player1.hunger += itemList[i].data1;
-            player1.hunger = player1.hunger>MAX_HUNGER?MAX_HUNGER:player1.hunger;
-            break;
-          case AMMO:
-            switch(itemList[i].data1)
-            {
-              case 0:
-                player1.pistolAmmo += itemList[i].data2;
-                break;
-              case 1:
-                player1.shotgunAmmo += itemList[i].data2;
-                break;
-              case 2:
-                player1.rifleAmmo += itemList[i].data2;
-                break;
-            }
-            break;
-          case WEAPON:
-            break;
+            wpnPtr->state = READY;
         }
-      }
-      if(PH_CheckCollision(&itemList[i].entityData,&player2.entityData))
-      {
-        switch(itemList[i].itemType)
-        {
-          case HEALTH:
-            player2.health += itemList[i].data1;
-            player2.health = player2.health>MAX_HEALTH?MAX_HEALTH:player2.health;
-            break;
-          case FOOD:
-            player2.hunger += itemList[i].data1;
-            player2.hunger = player2.hunger>MAX_HUNGER?MAX_HUNGER:player2.hunger;
-            break;
-          case AMMO:
-            switch(itemList[i].data1)
-            {
-              case 0:
-                player2.pistolAmmo += itemList[i].data2;
-                break;
-              case 1:
-                player2.shotgunAmmo += itemList[i].data2;
-                break;
-              case 2:
-                player2.rifleAmmo += itemList[i].data2;
-                break;
-            }
-            break;
-          case WEAPON:
-            break;
-        }
-      }
     }
-  }
-  if(player1.active)
-  {
-    camera1.pos = player1.entityData.pos;
-    camera1.direction = player1.entityData.rot;
-  }
-  else
-  {
-    camera1.direction += 10000 * dT / 1000;
-  }
-  if(player2.active)
-  {
-    camera2.pos = player2.entityData.pos;
-    camera2.direction = player2.entityData.rot;
-  }
-  else
-  {
-    camera2.direction += 10000 * dT / 1000;
-  }
+    if(wpnPtr->reloadTimer < wpnPtr->data->reloadSpeed && wpnPtr->state == RELOAD)
+    {
+        wpnPtr->reloadTimer += dT;
+        if(wpnPtr->reloadTimer >= wpnPtr->data->reloadSpeed)
+        {
+            if(wpnPtr->data->type == HANDGUN)
+            {
+                playerPtr->pistolAmmo += wpnPtr->magCur;
+                if(playerPtr->pistolAmmo > wpnPtr->data->magCap)
+                {
+                    wpnPtr->magCur = wpnPtr->data->magCap;
+                    playerPtr->pistolAmmo -= wpnPtr->data->magCap;
+                }
+                else
+                {
+                    wpnPtr->magCur = playerPtr->pistolAmmo;
+                    playerPtr->pistolAmmo = 0;
+                }
+            }
+            else if(wpnPtr->data->type == SHOTGUN)
+            {
+                playerPtr->shotgunAmmo += wpnPtr->magCur;
+                if(playerPtr->shotgunAmmo > wpnPtr->data->magCap)
+                {
+                    wpnPtr->magCur = wpnPtr->data->magCap;
+                    playerPtr->shotgunAmmo -= wpnPtr->data->magCap;
+                }
+                else
+                {
+                    wpnPtr->magCur = playerPtr->shotgunAmmo;
+                    playerPtr->shotgunAmmo = 0;
+                }
+            }
+            else if(wpnPtr->data->type == RIFLE)
+            {
+                playerPtr->rifleAmmo += wpnPtr->magCur;
+                if(playerPtr->rifleAmmo > wpnPtr->data->magCap)
+                {
+                    wpnPtr->magCur = wpnPtr->data->magCap;
+                    playerPtr->rifleAmmo -= wpnPtr->data->magCap;
+                }
+                else
+                {
+                    wpnPtr->magCur = playerPtr->rifleAmmo;
+                    playerPtr->rifleAmmo = 0;
+                }
+            }
+            wpnPtr->state = READY;
+            Music_PlaySound(SND_GUNCHAMBER);
+        }
+    }
 
-  player1DrawFlag = 1;  //enable drawing
-  player2DrawFlag = 1;
+
+    //Enemy calculations
+    for(i = 0; i<N_ENEMIES; i++)
+    {
+        if(enemyList[i].active)
+        {
+            PH_EntityAct(&(enemyList[i].entityData),dT);    //Update position
+            wpnPtr = &enemyI.weapon;
+            if(wpnPtr->fireTimer < wpnPtr->data->fireRate && wpnPtr->state == ATTACK)
+            {
+                wpnPtr->fireTimer += dT;
+                if(wpnPtr->fireTimer >= wpnPtr->data->fireRate)
+                {
+                    wpnPtr->state = READY;
+                }
+            }
+        }
+    }
+    //Projectile calculations
+    for(i = 0; i<N_PROJECTILES; i++)
+    {
+        if(projectileList[i].active)
+        {
+            PH_EntityAct(&(projectileList[i].entityData),dT);
+        }
+    }
+    //Item calculations
+    for(i = 0; i<N_ITEMS; i++)
+    {
+        if(itemList[i].active)
+        {
+            PH_EntityAct(&(itemList[i].entityData),dT);
+        }
+    }
+
+    //Collision checks
+
+    //Check for projectiles hitting enemies
+    projectile* curProj;
+    enemy* curEnemy;
+    for(i = 0; i<N_PROJECTILES; i++)
+    {
+        curProj = &projectileList[i];
+        if(curProj->entityData.pos.z <= 0)
+        {
+            curProj->active = 0;    //Check collision with ground
+        }
+        if(getTile(curProj->entityData.pos.x,curProj->entityData.pos.y)&0x10)
+        {
+            curProj->active = 0;    //Check collision with solid wall
+        }
+        if(curProj->active)
+        {
+            for(j = 0; j<N_ENEMIES; j++)
+            {
+                curEnemy = &enemyList[j];
+                if(curEnemy->active)
+                {
+                    if(PH_CheckCollision(&(curProj->entityData),&(curEnemy->entityData)))
+                    {
+                        PF_EOR(2);
+                        curEnemy->health -= curProj->damage;    //If there's a hit, enemy takes damage
+                        curProj->active = 0;
+                        if(curEnemy->health <= 0)
+                        {
+                            Music_PlaySound(SND_ZOMBIEDIE);
+                            curEnemy->active = 0;                //If the enemy dies, deactivate it
+                            curProj->owner->kills += 1;    //Increase the owner's kill score
+                            if(curEnemy->data == &emy_mrskeltal)
+                            {
+                                bossKills++;
+                                switch(bossKills)
+                                {
+                                    case 1:
+                                        initWeapon(&player1.weapons[1],weaponPresets[WPN_GLOCK18]);
+                                        break;
+                                    case 2:
+                                        initWeapon(&player1.weapons[2],weaponPresets[WPN_R870M]);
+                                        break;
+                                    case 3:
+                                        initWeapon(&player1.weapons[3],weaponPresets[WPN_AR15A]);
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    for(i = 0; i<N_ITEMS; i++)
+    {
+        if(itemList[i].active)
+        {
+            if(itemList[i].entityData.pos.z <= 0)
+            {
+                itemList[i].entityData.pos.z = 1000; //Hover above ground
+            }
+            if(PH_CheckCollision(&itemList[i].entityData,&player1.entityData))
+            {
+                switch(itemList[i].itemType)
+                {
+                    case HEALTH:
+                        player1.health += itemList[i].data1;
+                        player1.health = player1.health>MAX_HEALTH?MAX_HEALTH:player1.health;
+                        break;
+                    case FOOD:
+                        player1.hunger += itemList[i].data1;
+                        player1.hunger = player1.hunger>MAX_HUNGER?MAX_HUNGER:player1.hunger;
+                        break;
+                    case AMMO:
+                        switch(itemList[i].data1)
+                        {
+                            case 0:
+                                player1.pistolAmmo += itemList[i].data2;
+                                break;
+                            case 1:
+                                player1.shotgunAmmo += itemList[i].data2;
+                                break;
+                            case 2:
+                                player1.rifleAmmo += itemList[i].data2;
+                                break;
+                        }
+                        break;
+                    case WEAPON:
+                        break;
+                }
+            }
+            if(PH_CheckCollision(&itemList[i].entityData,&player2.entityData))
+            {
+                switch(itemList[i].itemType)
+                {
+                    case HEALTH:
+                        player2.health += itemList[i].data1;
+                        player2.health = player2.health>MAX_HEALTH?MAX_HEALTH:player2.health;
+                        break;
+                    case FOOD:
+                        player2.hunger += itemList[i].data1;
+                        player2.hunger = player2.hunger>MAX_HUNGER?MAX_HUNGER:player2.hunger;
+                        break;
+                    case AMMO:
+                        switch(itemList[i].data1)
+                        {
+                            case 0:
+                                player2.pistolAmmo += itemList[i].data2;
+                                break;
+                            case 1:
+                                player2.shotgunAmmo += itemList[i].data2;
+                                break;
+                            case 2:
+                                player2.rifleAmmo += itemList[i].data2;
+                                break;
+                        }
+                        break;
+                    case WEAPON:
+                        break;
+                }
+            }
+        }
+    }
+    if(player1.active)
+    {
+        camera1.pos = player1.entityData.pos;
+        camera1.direction = player1.entityData.rot;
+    }
+    else
+    {
+        camera1.direction += 10000 * dT / 1000;
+    }
+    if(player2.active)
+    {
+        camera2.pos = player2.entityData.pos;
+        camera2.direction = player2.entityData.rot;
+    }
+    else
+    {
+        camera2.direction += 10000 * dT / 1000;
+    }
+
+    player1DrawFlag = 1;    //enable drawing
+    player2DrawFlag = 1;
 }
 
 void initPlayer(player* plyr)
 {
-  plyr->active = 1;
-  plyr->activeWeapon = 0;
-  plyr->weapons[0].state = READY;
+    plyr->active = 1;
+    plyr->activeWeapon = 0;
+    plyr->weapons[0].state = READY;
 
-  initWeapon(&plyr->weapons[0],weaponPresets[WPN_KNIFE]);
-  initWeapon(&plyr->weapons[1],weaponPresets[WPN_GLOCK17]);
-  initWeapon(&plyr->weapons[2],weaponPresets[WPN_R870]);
-  initWeapon(&plyr->weapons[3],weaponPresets[WPN_AR15]);
+    initWeapon(&plyr->weapons[0],weaponPresets[WPN_KNIFE]);
+    initWeapon(&plyr->weapons[1],weaponPresets[WPN_GLOCK17]);
+    initWeapon(&plyr->weapons[2],weaponPresets[WPN_R870]);
+    initWeapon(&plyr->weapons[3],weaponPresets[WPN_AR15]);
 
 
-  plyr->speed = 1000;
+    plyr->speed = 1000;
 
-  plyr->entityData.pos.x = 20000;
-  plyr->entityData.pos.y = 20000;
-  plyr->entityData.pos.z = 1000;
-  plyr->entityData.rot = 0;
-  plyr->entityData.dim.height = 1000;
-  plyr->entityData.dim.depth = 1000;
-  plyr->entityData.dim.width = 1000;
-  plyr->health = MAX_HEALTH;
-  plyr->health = MAX_HUNGER;
-  plyr->pistolAmmo = 60;
-  plyr->shotgunAmmo = 8;
-  plyr->rifleAmmo = 30;
+    plyr->entityData.pos.x = 20000;
+    plyr->entityData.pos.y = 20000;
+    plyr->entityData.pos.z = 1000;
+    plyr->entityData.rot = 0;
+    plyr->entityData.dim.height = 1000;
+    plyr->entityData.dim.depth = 1000;
+    plyr->entityData.dim.width = 1000;
+    plyr->health = MAX_HEALTH;
+    plyr->health = MAX_HUNGER;
+    plyr->pistolAmmo = 60;
+    plyr->shotgunAmmo = 8;
+    plyr->rifleAmmo = 30;
 }
 
 void startGame(void)
 {
-  player1.entityData.pos.x = 10000;
-  player1.entityData.pos.y = 10000;
-  player2.entityData.pos.x = 30000;
-  player2.entityData.pos.y = 30000;
-  RC_InitWorld(&myWorld,worldArray,W_WIDTH,W_HEIGHT);
-  RC_InitCamera(&camera1,player1.entityData.pos.x,player1.entityData.pos.y,0,90000,COLUMNS,ROWS,64000,rayArray1);
-  RC_InitCamera(&camera2,player2.entityData.pos.x,player2.entityData.pos.y,0,90000,COLUMNS,ROWS,64000,rayArray2);
-  stateGlobal = TITLE;
-  while(globalTimer < 2000);
-  while(!player1Present);
-  Interface_ClearBuffer(&interfaceList[0]);
-  uint32_t i = 0;
+    player1.entityData.pos.x = 10000;
+    player1.entityData.pos.y = 10000;
+    player2.entityData.pos.x = 30000;
+    player2.entityData.pos.y = 30000;
+    RC_InitWorld(&myWorld,worldArray,W_WIDTH,W_HEIGHT);
+    RC_InitCamera(&camera1,player1.entityData.pos.x,player1.entityData.pos.y,0,90000,COLUMNS,ROWS,64000,rayArray1);
+    RC_InitCamera(&camera2,player2.entityData.pos.x,player2.entityData.pos.y,0,90000,COLUMNS,ROWS,64000,rayArray2);
+    stateGlobal = TITLE;
+    while(globalTimer < 2000);
+    while(!player1Present);
+    Interface_ClearBuffer(&interfaceList[0]);
+    uint32_t i = 0;
 
-  //Deactivate all entities
-  for(i = 0; i< N_ENEMIES; i++)
-  {
-    enemyList[i].active = 0;
-  }
-  for(i = 0; i< N_PROJECTILES; i++)
-  {
-    projectileList[i].active = 0;
-  }
-  for(i = 0; i< N_ITEMS; i++)
-  {
-    itemList[i].active = 0;
-  }
-  //Initialize players
-  initPlayer(&player1);
-  //initPlayer(&player2);
-
-  while(1)
-  {
-    switch(stateGlobal)
+    //Deactivate all entities
+    for(i = 0; i< N_ENEMIES; i++)
     {
-      case TITLE:
-        if(Interface_GetDigital(&interfaceList[0],'a'))
-        {
-          // Random_Init(SysTick_Current^globalTimer);
-          Music_PauseSong();
-          stateGlobal = PLAY;
-          stateGraphics = RAYCASTING;
-          spawnEnemyRandom(0);
-          spawnEnemyRandom(0);
-          spawnEnemyRandom(0);
-          spawnEnemyRandom(0);
-
-        }
-        break;
-      case PLAY:
-        actWorld();
-        break;
+        enemyList[i].active = 0;
     }
-  }
+    for(i = 0; i< N_PROJECTILES; i++)
+    {
+        projectileList[i].active = 0;
+    }
+    for(i = 0; i< N_ITEMS; i++)
+    {
+        itemList[i].active = 0;
+    }
+    //Initialize players
+    initPlayer(&player1);
+    //initPlayer(&player2);
+
+    while(1)
+    {
+        switch(stateGlobal)
+        {
+            case TITLE:
+                if(Interface_GetDigital(&interfaceList[0],'a'))
+                {
+                    // Random_Init(SysTick_Current^globalTimer);
+                    Music_PauseSong();
+                    stateGlobal = PLAY;
+                    stateGraphics = RAYCASTING;
+                    spawnEnemyRandom(0);
+                    spawnEnemyRandom(0);
+                    spawnEnemyRandom(0);
+                    spawnEnemyRandom(0);
+
+                }
+                break;
+            case PLAY:
+                actWorld();
+                break;
+        }
+    }
 }
 
 int main(void)
 {
-  //SysTick_Init(WAIT_1MS,1,&SysTickHandler);       //Game timer
-  //Timer0_Init(&Timer0Handler,WAIT_1MS * 50);      //Draw attempt every 50 ms
-  //Timer1_Init(&Timer1Handler,WAIT_1MS * 5);       //Request inputs every 10 ms
-  Timer1_Disable();
-  SysTick_DisableAll();
-  Interface_Init(&interfaceList[0]);
-  Music_Init();
-  Music_LoadSong(4);
-  Music_PlaySong();
-  SysTick_EnableAll();
-  startGame();
-  return 0;
+    //SysTick_Init(WAIT_1MS,1,&SysTickHandler);     //Game timer
+    //Timer0_Init(&Timer0Handler,WAIT_1MS * 50);    //Draw attempt every 50 ms
+    //Timer1_Init(&Timer1Handler,WAIT_1MS * 5);     //Request inputs every 10 ms
+    Timer1_Disable();
+    SysTick_DisableAll();
+    Interface_Init(&interfaceList[0]);
+    Music_Init();
+    Music_LoadSong(4);
+    Music_PlaySong();
+    SysTick_EnableAll();
+    startGame();
+    return 0;
 }
