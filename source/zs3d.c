@@ -25,6 +25,7 @@
 //#include "print.h"
 #include "platform/music.h"
 #include "platform/interface.h"
+#include "platform/platform.h"
 
 //#define W_WIDTH 40
 //#define W_HEIGHT 40
@@ -1270,18 +1271,24 @@ void startGame(void)
     }
 }
 
+TaskHandle timer;
+TaskHandle render;
+TaskHandle input;
 int main(void)
 {
-    //SysTick_Init(WAIT_1MS,1,&SysTickHandler);     //Game timer
-    //Timer0_Init(&Timer0Handler,WAIT_1MS * 50);    //Draw attempt every 50 ms
-    //Timer1_Init(&Timer1Handler,WAIT_1MS * 5);     //Request inputs every 10 ms
-    Timer1_Disable();
-    SysTick_DisableAll();
+    timer   = PeriodicTask_Register(&TimerHandler,1000);
+    render  = PeriodicTask_Register(&RenderHandler,50000);
+    input   = PeriodicTask_Register(&InputHandler,5000);
+
     Interface_Init(&interfaceList[0]);
     Music_Init();
     Music_LoadSong(4);
     Music_PlaySong();
-    SysTick_EnableAll();
+
+    PeriodTask_Start(timer);
+    PeriodTask_Start(render);
+    PeriodTask_Start(input);
+
     startGame();
     return 0;
 }
