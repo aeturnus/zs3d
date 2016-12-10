@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include "btypes.h"
-#include "bmath.h"
-#include "braycaster.h"
+#include "brandonware/btypes.h"
+#include "brandonware/bmath.h"
+#include "brandonware/braycaster.h"
 
 void RC_InitWorld(world* worldPtr,uint8_t* worldArray,uint32_t width,uint32_t height)
 {
@@ -101,8 +101,8 @@ void RC_CastRay(camera* cameraPtr,world* worldPtr, fixed32_3 angle,uint32_t inde
     uint8_t wallData=0;
     uint8_t wallMeta=0;
     ufixed16_3 wallOffset=0;
-  
-  
+
+
     #if (RAYCASTER==0)
     //Legit raycaster
     fixed32_3 x,y,yA,xA,dY,dX,xD,yD,xX,yX,xY,yY;
@@ -124,7 +124,7 @@ void RC_CastRay(camera* cameraPtr,world* worldPtr, fixed32_3 angle,uint32_t inde
     }
     xA = x + div32_3((y - yA),tangentFix(angle));
     dX = div32_3(1000,tangentFix(angle));
-    
+
     //xD = xA - x;  //add initial movement
     //yD = yA - y;  //add initial movement
     xX = xA;       //move ray pos up
@@ -152,7 +152,7 @@ void RC_CastRay(camera* cameraPtr,world* worldPtr, fixed32_3 angle,uint32_t inde
     {
       xD = 0x7FFFFFFF;
     }
-    
+
     //Calculate the y-intercepts
     if((angle<90000 && angle>0)||(angle>270000&&angle<360000))
     {
@@ -166,7 +166,7 @@ void RC_CastRay(camera* cameraPtr,world* worldPtr, fixed32_3 angle,uint32_t inde
     }
     yA = y + mul32_3((x - xA),tangentFix(angle));
     dY = mul32_3(1000,tangentFix(angle));
-    
+
    // xD = xA - x;  //add initial movement
     //yD = yA - y;  //add initial movement
     xY = xA;       //move ray pos up
@@ -196,7 +196,7 @@ void RC_CastRay(camera* cameraPtr,world* worldPtr, fixed32_3 angle,uint32_t inde
     {
       yD = 0x7FFFFFFF;
     }
-    
+
     if(xD < yD)
     {
       //X hit
@@ -216,10 +216,10 @@ void RC_CastRay(camera* cameraPtr,world* worldPtr, fixed32_3 angle,uint32_t inde
     {
       distance = 0x7FFFFFFF;
     }
-    
-    
+
+
     #else
-    
+
     //I present: the shittiest distance finder ever. Plods along at a constant dR
     #define DISTANCE_CHANGE 50 //dR constant is .100
     fixed32_3 dX = mul32_3(DISTANCE_CHANGE,cosineFix(angle));    //get the change in x
@@ -289,7 +289,7 @@ void RC_CastRay(camera* cameraPtr,world* worldPtr, fixed32_3 angle,uint32_t inde
       wallMeta |= Y_HIT;
       wallOffset = modY;
     }
-    
+
     #endif
 
     cameraPtr->rayArray[index].distance = distance;

@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "bfifo.h"
+#include "brandonware/bfifo.h"
 
 /*
 #ifndef FIFO_SUCCESS
@@ -140,7 +140,7 @@ uint8_t dequeue16(fifo16* fifo, uint16_t* dataPtr)
     {
       fifo->status = FIFO_SUCCESS;
     }
-    
+
   }
   else
   {

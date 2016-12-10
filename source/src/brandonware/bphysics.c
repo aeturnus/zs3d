@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include "bphysics.h"
-#include "bmath.h"
-#include "btypes.h"
+#include "brandonware/bphysics.h"
+#include "brandonware/bmath.h"
+#include "brandonware/btypes.h"
 
 //---- Entity Act -----
 // Inputs: pointer to entity, change in time
@@ -10,20 +10,20 @@
 
 void PH_EntityAct(entity* entityPtr,fixed32_3 dT)
 {
-  
+
   entityPtr->pos.x += mul32_3(entityPtr->vel.x,dT);
   entityPtr->pos.y += mul32_3(entityPtr->vel.y,dT);
   entityPtr->pos.z += mul32_3(entityPtr->vel.z,dT);
 
   entityPtr->vel.x += mul32_3(entityPtr->acc.x,dT);
   entityPtr->vel.y += mul32_3(entityPtr->acc.y,dT);
-  entityPtr->vel.z += mul32_3(entityPtr->acc.z,dT); 
+  entityPtr->vel.z += mul32_3(entityPtr->acc.z,dT);
 }
 
 //---- IsInEntity -----
 // Inputs: point, pointer to entity 2
-// Output: 1 for true, 0 for not true 
-// Will check for a point being inside an entity 
+// Output: 1 for true, 0 for not true
+// Will check for a point being inside an entity
 uint8_t PH_IsInEntity(point spot,entity* entityPtr)
 {
   vector pos = entityPtr->pos;
@@ -45,7 +45,7 @@ uint8_t PH_IsInEntity(point spot,entity* entityPtr)
 
 //---- Check Collision -----
 // Inputs: pointer to entity 1, pointer to entity 2
-// Output: 1 for collision, 0 for no collision 
+// Output: 1 for collision, 0 for no collision
 // Will check for a colision between two entities
 uint8_t PH_CheckCollision(entity* entityPtr0,entity* entityPtr1)
 {

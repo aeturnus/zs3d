@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "btypes.h"
+#include "brandonware/btypes.h"
 
 //Multiplication and division functions due to scaling for fixed point
 

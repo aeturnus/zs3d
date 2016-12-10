@@ -1,5 +1,5 @@
-#include "btypes.h"
-#include "bmath.h"
+#include "brandonware/btypes.h"
+#include "brandonware/bmath.h"
 
 //This is a sine lookup table regarding angles 0-90
 //This is an array of the numerator portion of a fraction struct with denominator 1000, or the fractional bits of a fixed point notation
@@ -487,11 +487,11 @@ vector vectorCrossProduct(vector* v1, vector* v2)
 vector polarToVector(fixed32_3 mag, fixed32_3 angle)
 {
   vector output = {0,0,0};
-  
+
   output.x = mul32_3(mag,cosineFix(angle));
   output.y = mul32_3(mag,sineFix(angle));
   output.z = 0;
-  
+
   return output;
 }
 

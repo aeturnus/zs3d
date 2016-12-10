@@ -1,6 +1,6 @@
 #include <stdint.h>
-#include "bmml.h"
-#include "btypes.h"
+#include "brandonware/bmml.h"
+#include "brandonware/btypes.h"
 
 
 /*
@@ -10,16 +10,16 @@
  * This has the waveform tables for various instruments
  * This is meant to be used with an 8-bit DAC.
  * This will parse a subset of the Music Macro Language (MML) that includes ties, dots, and jumps
- * 
+ *
  * Method of Operation:
  * The synth library will interpret a string of commands which will define behaviours. This is effectively an implementation of Music Macro Language
  * The commands will essentially work similar machine
  * Commands:
-  * 
+  *
  * Example:
  * "o4v9t120|" .bmml file
  * "o\x04v\x09t\x78" use converter to produce this
- * 
+ *
  */
 
  /*
@@ -42,7 +42,7 @@
   * -------------
   * Will set the tempo by bpm
   * Operand range: 1-255
-  * 
+  *
   * -------------
   * 'l' - length
   * -------------
@@ -58,7 +58,7 @@
   * --------------
   * '<' - lower octave
   * --------------
-  * Decrease octave by one  
+  * Decrease octave by one
   *
   * ---------------
   * '>' - raise octave
@@ -98,9 +98,9 @@ const uint8_t sineTable[128] =
 		, 128, 121, 115, 109, 103, 97, 91, 85, 79, 73, 68, 62, 57, 52, 47, 42, 38, 33, 29, 25, 22, 19, 15, 13, 10, 8, 6, 4, 3, 2, 1, 1
 		, 1, 1, 1, 2, 3, 4, 6, 8, 10, 13, 15, 19, 22, 25, 29, 33, 38, 42, 47, 52, 57, 62, 68, 73, 79, 85, 91, 97, 103, 109, 115, 121
 	};
-  
-  
-const struct BMML_Instrument sine = {
+
+
+const BMML_Instrument sine = {
   {	128, 134, 140, 146, 152, 158, 164, 170, 176, 182, 187, 193, 198, 203, 208, 213, 217, 222, 226, 230, 233, 236, 240, 242, 245, 247, 249, 251, 252, 253, 254, 254
 		, 255, 254, 254, 253, 252, 251, 249, 247, 245, 242, 240, 236, 233, 230, 226, 222, 217, 213, 208, 203, 198, 193, 187, 182, 176, 170, 164, 158, 152, 146, 140, 134
 		, 128, 121, 115, 109, 103, 97, 91, 85, 79, 73, 68, 62, 57, 52, 47, 42, 38, 33, 29, 25, 22, 19, 15, 13, 10, 8, 6, 4, 3, 2, 1, 1
@@ -160,7 +160,7 @@ uint8_t blank[] = "";
 //Inputs : Pointer to BMML_Track struct
 //Outputs: None
 //
-void BMML_TrackInit(struct BMML_Track* track, uint32_t reload)
+void BMML_TrackInit(BMML_Track* track, uint32_t reload)
 {
   track->program = blank;
   track->pc = 0;
@@ -177,13 +177,13 @@ void BMML_TrackInit(struct BMML_Track* track, uint32_t reload)
   track->tickWhole = BMML_CalcWhole(BUS_CLOCK,track->tempo,reload); //Calculate the total amount of interrupts per whole note
 }
 
-void BMML_TrackLoadSong(struct BMML_Track* track, uint32_t reload, uint8_t* program)
+void BMML_TrackLoadSong(BMML_Track* track, uint32_t reload, uint8_t* program)
 {
-  BMML_TrackInit(track,reload); //Reinitialize 
+  BMML_TrackInit(track,reload); //Reinitialize
   track->program = program;
 }
 
-void BMML_HolderLoadSong(struct BMML_TrackHolder* holder, struct BMML_Song* song, uint32_t reload)
+void BMML_HolderLoadSong(BMML_Holder* holder, BMML_Song* song, uint32_t reload)
 {
   uint8_t holderIndex,songIndex;
   holder->runningLength = 0;
@@ -198,18 +198,18 @@ void BMML_HolderLoadSong(struct BMML_TrackHolder* holder, struct BMML_Song* song
   }
 }
 
-void BMML_HolderUpdate(struct BMML_TrackHolder* holder, uint32_t reload)
+void BMML_HolderUpdate(BMML_Holder* holder, uint32_t reload)
 {
   uint8_t length = holder->runningLength;
   uint32_t output = 0;
   for(uint8_t i = 0;i<length;i++)
   {
     BMML_TrackUpdate(&(holder->tracks[i]),reload);
-    output += ((holder->tracks[i]).output); //Add each of the track's outputs 
+    output += ((holder->tracks[i]).output); //Add each of the track's outputs
   }
   holder->output = (output/(length)); //Divide so you don't saturate
 }
-void BMML_HolderInit(struct BMML_TrackHolder* holder, uint32_t reload)
+void BMML_HolderInit(BMML_Holder* holder, uint32_t reload)
 {
   uint8_t length = holder->length;
   for(uint8_t i = 0;i<length;i++)
@@ -222,7 +222,7 @@ void BMML_HolderInit(struct BMML_TrackHolder* holder, uint32_t reload)
 //Inputs : Pointer to BMML_Track struct
 //Outputs: None
 //
-void BMML_TrackUpdate(struct BMML_Track* track, uint32_t reload)
+void BMML_TrackUpdate(BMML_Track* track, uint32_t reload)
 {
   if(track->program[track->pc] == 0)
   {
@@ -281,7 +281,7 @@ void BMML_TrackUpdate(struct BMML_Track* track, uint32_t reload)
 //Inputs : Pointer to a BMML_Track struct, reload value for timer
 //Outputs: None
 //Will update the PC of the track to the newest NOTE, the only time dependent element. E.g. it will process all the tempo changes and length changes before setting the next note
-void BMML_ParseProgram(struct BMML_Track* track, uint32_t reload)
+void BMML_ParseProgram(BMML_Track* track, uint32_t reload)
 {
   uint8_t note = 0;     //Has a note been encountered?
   uint8_t current;      //Current item pointed to by the PC
@@ -312,7 +312,7 @@ void BMML_ParseProgram(struct BMML_Track* track, uint32_t reload)
       case 't':
         track->tempo = track->program[track->pc];         //PC already sits on the operand. Increment pc after. Max 255. Heh 8 bit max is 255 ;P
         track->pc++;
-        track->tickWhole = BMML_CalcWhole(BUS_CLOCK,track->tempo,reload); 
+        track->tickWhole = BMML_CalcWhole(BUS_CLOCK,track->tempo,reload);
         break;
       case 'l':
         operand = track->program[track->pc];              //PC already sits on the operand. Increment pc after. Max 64
@@ -432,7 +432,7 @@ void BMML_ParseProgram(struct BMML_Track* track, uint32_t reload)
                 pitchIndex = track->octave * 12 + 11;
                 break;
             }
-            
+
             //Sharp and flat calculation
             operand = track->program[track->pc];  //operand is the next operand
             while(operand == '+' || operand == '-')
@@ -453,12 +453,12 @@ void BMML_ParseProgram(struct BMML_Track* track, uint32_t reload)
             //operand already updated for next part
           }
           ////////
-          
-          
+
+
           //Calculate tickTotal.
           //Operand has already been taken
           track->tickTotal = 0; //tick total is currently 0
-          
+
           //Initial calculation
           if(operand == 1 || operand == 2 || operand == 4 || operand == 8 || operand == 12 || operand == 16 || operand == 24 || operand == 32 || operand == 64)
           {
@@ -487,7 +487,7 @@ void BMML_ParseProgram(struct BMML_Track* track, uint32_t reload)
               break;
             }
           }
-          
+
           ////Repeated calculation
           ////This is by no way the most elegant way of doing it. I would do it by recursion, but I just want it to be working
           uint8_t length = track->length; //length of the last length. Basically only for the dotted note to use
@@ -532,7 +532,7 @@ void BMML_ParseProgram(struct BMML_Track* track, uint32_t reload)
               //look ahead to check for unacceptable operand
               if(operand == 1 || operand == 2 || operand == 4 || operand == 8 || operand == 12 || operand == 16 || operand == 24 || operand == 32 || operand == 64)
               {
-                
+
               }
               else if (operand == '.')
               {
@@ -556,7 +556,7 @@ void BMML_ParseProgram(struct BMML_Track* track, uint32_t reload)
             operand = track->program[track->pc];
           }
           ////////
-          
+
         }
         break;
     }

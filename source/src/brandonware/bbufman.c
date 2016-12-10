@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include "bbufman.h"
-#include "btypes.h"
-#include "bmath.h"
+#include "brandonware/bbufman.h"
+#include "brandonware/btypes.h"
+#include "brandonware/bmath.h"
 
 // These subroutines are meant for 16 bit buffers
 
@@ -28,7 +28,7 @@ void BM_BufferInit_16(buffer16* buffer, uint16_t* bufferArray, uint32_t bufferW,
 void BM_DrawPixel_16(int32_t x, int32_t y, uint16_t color, buffer16* b)
 {
   //If the x and y positions are outside the bounds of the buffer, ignore the pixel
-  if((x >= b->width) || (y >= b->height) || (x < 0) || (y < 0)) 
+  if((x >= b->width) || (y >= b->height) || (x < 0) || (y < 0))
   {
     return;
   }
@@ -184,7 +184,7 @@ void BM_DrawLine_16(int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint16_t col
     dx <<= 1; // dx is now 2*dx
     BM_DrawPixel_16(x0,y0,color,b); // Draw the first pixel.
 
-    if (dx > dy) 
+    if (dx > dy)
     {
       fraction = dy - (dx >> 1);
       while (x0 != x1)
@@ -410,21 +410,21 @@ void BM_ClearBuffer_16(buffer16* b)
 // bitmapPtr is a pointer to source bitmap
 // b is destination buffer
 // Will scale a bitmap, putting it into the buffer at a certain scale
-void BM_ScaleBitmap_16(	int32_t x,						int32_t y, 
-												uint32_t width,			 	uint32_t height, 
-												ufixed32_3 scaleX,	 	ufixed32_3 scaleY, 
+void BM_ScaleBitmap_16(	int32_t x,						int32_t y,
+												uint32_t width,			 	uint32_t height,
+												ufixed32_3 scaleX,	 	ufixed32_3 scaleY,
 												uint16_t* bitmapPtr, 	buffer16* b){
-													
+
   uint32_t destWidth = (width * scaleX) / 1000;
   uint32_t destHeight = (height * scaleY) / 1000;
-  
+
   uint32_t sourceX, sourceY;                          //defines what pixel in source bitmap to look at
   for(uint32_t i = 0;i < destHeight; i++){
     for(uint32_t j = 0; j < destWidth; j++){
-      
+
       sourceX = j * 1000 / scaleX;
       sourceY = i * 1000 / scaleY;
-      
+
       uint16_t pixel = bitmapPtr[sourceY * width      //get row
                                   + sourceX];         //get column
       BM_DrawPixel_16(j + x, i + y, pixel, b);      //draw pixel if not transparent
@@ -436,22 +436,22 @@ void BM_ScaleBitmap_16(	int32_t x,						int32_t y,
 // Inputs : x,y,w,h,scale,buffer,pointer to bitmap
 // Outputs: none
 // Will scale a bitmap, putting it into the buffer at a certain scale. Takes 0x0000 as a transparency
-void BM_ScaleBitmapOver_16( int32_t x,            int32_t y, 
+void BM_ScaleBitmapOver_16( int32_t x,            int32_t y,
                             uint32_t width,       uint32_t height,
-                            ufixed32_3 scaleX,    ufixed32_3 scaleY, 
+                            ufixed32_3 scaleX,    ufixed32_3 scaleY,
                             uint16_t* bitmapPtr,  buffer16* b){
   scaleX = scaleX>10000?10000:scaleX;
   scaleY = scaleY>10000?10000:scaleY;
   uint32_t destWidth = (width * scaleX) / 1000;
   uint32_t destHeight = (height * scaleY) / 1000;
-  
+
   uint32_t sourceX, sourceY;                          //defines what pixel in source bitmap to look at
   for(uint32_t i = 0;i < destHeight; i++){
     for(uint32_t j = 0; j < destWidth; j++){
-      
+
       sourceX = j * 1000 / scaleX;
       sourceY = i * 1000 / scaleY;
-      
+
       uint16_t pixel = bitmapPtr[sourceY * width      //get row
                                   + sourceX];         //get column
       if(pixel != 0){
