@@ -309,6 +309,18 @@ void BM_DrawTriangle_16(int32_t p1x, int32_t p1y, int32_t p2x, int32_t p2y, int3
 #define GREEN_MASK = 0x07E0;
 #define BLUE_MASK = 0x001F;
 */
+
+// ---- RGB to 565 ----
+// Inputs : R, G, B
+// Outputs: 565 16bit color
+// This will convert an RGB representation to 565
+uint16_t BM_RGBTo565(uint8_t r, uint8_t g, uint8_t b)
+{
+  // extract upper 5 bits of blue, 6 of green
+  // since r is going to be at bottom, truncate w/ shift
+  return ((b & 0xF8) << 8) | ((g & 0xFC) << 3) | (r >> 3);
+}
+
 // ----- Color Darken -----
 // Inputs : 565 16bit color, number of times to brighten
 // Outputs: None

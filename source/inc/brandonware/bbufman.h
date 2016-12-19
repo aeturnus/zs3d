@@ -173,6 +173,12 @@ void BM_DrawLineThick_16(int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint16_
 // Draws a triangle given its points
 void BM_DrawTriangle_16(int32_t p1x, int32_t p1y, int32_t p2x, int32_t p2y, int32_t p3x, int32_t p3y,uint16_t color, buffer16* buffer);
 
+// ---- RGB to 565 ----
+// Inputs : R, G, B
+// Outputs: 565 16bit color
+// This will convert an RGB representation to 565
+uint16_t BM_RGBTo565(uint8_t r, uint8_t g, uint8_t b);
+
 // ----- Color Darken -----
 // Inputs : 565 16bit color, number of times to brighten
 // Outputs: None

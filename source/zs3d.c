@@ -263,7 +263,7 @@ void renderWall(ray inputRay,uint32_t i,uint8_t interface)
             case 1:
                 //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
                 //Interface1_DrawVLine(i,45-height/2,45+height/2,0xFFFF);
-                Interface_DrawLine(&interfaceList[0],i,45-height/2,i,45+height/2,ST7735_Color565(214,198,80));
+                Interface_DrawLine(&interfaceList[0],i,45-height/2,i,45+height/2,BM_RGBTo565(214,198,80));
                 break;
             case 2:
                 //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
@@ -275,9 +275,9 @@ void renderWall(ray inputRay,uint32_t i,uint8_t interface)
             switch(interface)
             {
             case 1:
-                //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,ST7735_Color565(127,127,127));
-                //Interface1_DrawVLine(i,45-height/2,45+height/2,ST7735_Color565(127,127,127));
-                Interface_DrawLine(&interfaceList[0],i,45-height/2,i,45+height/2,ST7735_Color565(127,127,127));
+                //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,BM_RGBTo565(127,127,127));
+                //Interface1_DrawVLine(i,45-height/2,45+height/2,BM_RGBTo565(127,127,127));
+                Interface_DrawLine(&interfaceList[0],i,45-height/2,i,45+height/2,BM_RGBTo565(127,127,127));
                 break;
             case 2:
                 //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
@@ -421,11 +421,11 @@ void renderWorld(void)
     //Interface2_DrawBuffer();
 
     Interface_LCDFillRect(&interfaceList[0],0,90,160,38,0x0000);
-    //Interface1_LCDFillRect(0,100,80*player1.health/MAX_HEALTH,10,ST7735_Color565(255,0,0));
+    //Interface1_LCDFillRect(0,100,80*player1.health/MAX_HEALTH,10,BM_RGBTo565(255,0,0));
     if(player1.active)
     {
         //Draw black rectangle
-        Interface_LCDFillRect(&interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,ST7735_Color565(255,0,0));
+        Interface_LCDFillRect(&interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,BM_RGBTo565(255,0,0));
         //Draw Ammo
         Interface_SetCursor(&interfaceList[0],1,10);
         Interface_OutString(&interfaceList[0],(uint8_t*)player1.weapons[player1.activeWeapon].data->name);
@@ -821,9 +821,9 @@ void actIntelligence(fixed32_3 dT)
                                 {
                                     player1.active = 0; //Player is deed
                                 }
-                                Interface1_LCDFillRect(0,0,160,30,ST7735_Color565(255,17,45));
-                                //Interface1_LCDFillRect(0,30,160,30,ST7735_Color565(255,17,45));
-                                //Interface1_LCDFillRect(0,60,160,30,ST7735_Color565(255,17,45));
+                                Interface1_LCDFillRect(0,0,160,30,BM_RGBTo565(255,17,45));
+                                //Interface1_LCDFillRect(0,30,160,30,BM_RGBTo565(255,17,45));
+                                //Interface1_LCDFillRect(0,60,160,30,BM_RGBTo565(255,17,45));
                             }
                         }
                     }
