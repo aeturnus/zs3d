@@ -10,17 +10,19 @@ OBJDIR = obj
 OBJECTS = $(SOURCES:.c=.o)
 
 .c.o:
-	$(CC) $(CFLAGS) -I$(INCLUDE) -c $< -o obj/$@
+	mkdir -p $(OBJDIR)
+	$(CC) $(CFLAGS) -I$(INCLUDE) -D$(PLATFORM) -c $< -o $(OBJDIR)/$(@F)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(OBJECTS) 
+	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(addprefix $(OBJDIR)/,$(notdir $(OBJECTS)))
 
 
 all: $(EXECUTABLE)
 	@echo "Program built"
 
 clean:
-	rm *.o $(EXECUTABLE)
+	rm -r $(OBJDIR)
+	rm $(EXECUTABLE)
 
 test:
 	./$(EXECUTABLE)
