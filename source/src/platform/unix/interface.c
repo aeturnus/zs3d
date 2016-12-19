@@ -164,9 +164,19 @@ uint8_t Interface_GetDigital(Interface interface, uint8_t button)
     }
 }
 
+extern int gameActive;
 void Interface_GetInput( Interface interface )
 {
-    //TODO: SDL code here
+    SDL_Event event;
+    while(SDL_PollEvent(&event))
+    {
+        switch(event.type)
+        {
+        case SDL_QUIT:
+            gameActive = 0;
+            break;
+        }
+    }
 }
 
 void Interface_DrawBitmap( Interface interface, int32_t x,int32_t y, int32_t w, int32_t h, uint16_t index)
