@@ -92,22 +92,6 @@ void Interface_OutString(Interface interface, uint8_t* string)
     //TODO: SDL code
 }
 
-typedef struct interface_str
-{
-    int present;
-    int32_t analog[2];
-    unsigned int a : 1;
-    unsigned int b : 1;
-    unsigned int x : 1;
-    unsigned int y : 1;
-    unsigned int l : 1;
-    unsigned int r : 1;
-
-    uint16_t buffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
-    buffer16 bufman;
-} Interface_Rec;
-
-
 int32_t Interface_GetAnalog(Interface interface, uint8_t axis)
 {
     int index = axis - 'x';
