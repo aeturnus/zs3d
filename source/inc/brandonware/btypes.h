@@ -26,6 +26,26 @@ typedef struct BT_Fraction64
 //used only to prevent overflows in multiplication and divide functions
 
 //.1 resolution
+#define MIN_UFIXED8_1  0
+#define MIN_UFIXED16_1 0
+#define MIN_UFIXED32_1 0
+#define MIN_UFIXED64_1 0
+
+#define MAX_UFIXED8_1  0xFFFFFFFF
+#define MAX_UFIXED16_1 0xFFFFFFFF
+#define MAX_UFIXED32_1 0xFFFFFFFF
+#define MAX_UFIXED64_1 0xFFFFFFFF
+
+#define MIN_FIXED8_1  0x80
+#define MIN_FIXED16_1 0x8000
+#define MIN_FIXED32_1 0x80000000
+#define MIN_FIXED64_1 0x8000000000000000
+
+#define MAX_FIXED8_1  0x7F
+#define MAX_FIXED16_1 0x7FFF
+#define MAX_FIXED32_1 0x7FFFFFFF
+#define MAX_FIXED64_1 0x7FFFFFFFFFFFFFFF
+
 typedef uint8_t		ufixed8_1;		// [00.0, 25.5]
 typedef uint16_t	ufixed16_1;		// [0000.0, 6553.5]
 typedef uint32_t	ufixed32_1;		// [000000000.0, 429496729.5]
@@ -37,6 +57,26 @@ typedef int32_t		fixed32_1;		// [-214748364.8, 214748364.7]
 typedef int64_t		fixed64_1;		// BIG/2
 
 //.01 resolution
+#define MIN_UFIXED8_2  0
+#define MIN_UFIXED16_2 0
+#define MIN_UFIXED32_2 0
+#define MIN_UFIXED64_2 0
+
+#define MAX_UFIXED8_2  0xFFFFFFFF
+#define MAX_UFIXED16_2 0xFFFFFFFF
+#define MAX_UFIXED32_2 0xFFFFFFFF
+#define MAX_UFIXED64_2 0xFFFFFFFF
+
+#define MIN_FIXED8_2  0x80
+#define MIN_FIXED16_2 0x8000
+#define MIN_FIXED32_2 0x80000000
+#define MIN_FIXED64_2 0x8000000000000000
+
+#define MAX_FIXED8_2  0x7F
+#define MAX_FIXED16_2 0x7FFF
+#define MAX_FIXED32_2 0x7FFFFFFF
+#define MAX_FIXED64_2 0x7FFFFFFFFFFFFFFF
+
 typedef uint8_t		ufixed8_2;		// [0.00, 2.55]
 typedef uint16_t	ufixed16_2;		// [000.00, 655.35]
 typedef uint32_t	ufixed32_2;		// [00000000.00, 42949672.95]
@@ -48,6 +88,26 @@ typedef int32_t		fixed32_2;		// [-21474836.48, 21474836.47]
 typedef int64_t		fixed64_2;		// BIG/2
 
 //.001 resolution
+#define MIN_UFIXED8_3  0
+#define MIN_UFIXED16_3 0
+#define MIN_UFIXED32_3 0
+#define MIN_UFIXED64_3 0
+
+#define MAX_UFIXED8_3  0xFFFFFFFF
+#define MAX_UFIXED16_3 0xFFFFFFFF
+#define MAX_UFIXED32_3 0xFFFFFFFF
+#define MAX_UFIXED64_3 0xFFFFFFFF
+
+#define MIN_FIXED8_3  0x80
+#define MIN_FIXED16_3 0x8000
+#define MIN_FIXED32_3 0x80000000
+#define MIN_FIXED64_3 0x8000000000000000
+
+#define MAX_FIXED8_3  0x7F
+#define MAX_FIXED16_3 0x7FFF
+#define MAX_FIXED32_3 0x7FFFFFFF
+#define MAX_FIXED64_3 0x7FFFFFFFFFFFFFFF
+
 typedef uint8_t		ufixed8_3;		// [.000, .255]
 typedef uint16_t	ufixed16_3;		// [00.000, 65.535]
 typedef uint32_t	ufixed32_3;		// [0000000.000, 4294967.295]
@@ -59,6 +119,26 @@ typedef int32_t		fixed32_3;		// [-2147483.648, 2147483.647]
 typedef int64_t		fixed64_3;		// BIG/2
 
 //.0001 resolution
+#define MIN_UFIXED8_4  0
+#define MIN_UFIXED16_4 0
+#define MIN_UFIXED32_4 0
+#define MIN_UFIXED64_4 0
+
+#define MAX_UFIXED8_4  0xFFFFFFFF
+#define MAX_UFIXED16_4 0xFFFFFFFF
+#define MAX_UFIXED32_4 0xFFFFFFFF
+#define MAX_UFIXED64_4 0xFFFFFFFF
+
+#define MIN_FIXED8_4  0x80
+#define MIN_FIXED16_4 0x8000
+#define MIN_FIXED32_4 0x80000000
+#define MIN_FIXED64_4 0x8000000000000000
+
+#define MAX_FIXED8_4  0x7F
+#define MAX_FIXED16_4 0x7FFF
+#define MAX_FIXED32_4 0x7FFFFFFF
+#define MAX_FIXED64_4 0x7FFFFFFFFFFFFFFF
+
 typedef uint8_t		ufixed8_4;		// [.0000, .0255]
 typedef uint16_t	ufixed16_4;		// [0.0000, 6.5535]
 typedef uint32_t	ufixed32_4;		// [000000.0000, 429496.7295]

@@ -76,21 +76,25 @@ fixed32_4 mul32_4_llp(fixed32_4 x1,fixed32_4 x2)
 //Fast, general purpose divide. numerator * (number of decimal places) cannot exceed 2^(32-1)
 fixed32_1 div32_1(fixed32_1 numerator,fixed32_1 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_1 : MAX_FIXED32_1;
 	fixed32_1 buffer = (numerator*10)/(denominator);
 	return buffer;
 }
 fixed32_2 div32_2(fixed32_2 numerator,fixed32_2 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_2 : MAX_FIXED32_2;
 	fixed32_2 buffer = (numerator*100)/(denominator);
 	return buffer;
 }
 fixed32_3 div32_3(fixed32_3 numerator,fixed32_3 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_3 : MAX_FIXED32_3;
 	fixed32_3 buffer = (numerator*1000)/(denominator);
 	return buffer;
 }
 fixed32_4 div32_4(fixed32_4 numerator,fixed32_4 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_4 : MAX_FIXED32_4;
 	fixed32_4 buffer = (numerator*10000)/(denominator);
 	return buffer;
 }
@@ -98,21 +102,25 @@ fixed32_4 div32_4(fixed32_4 numerator,fixed32_4 denominator)
 //Slow, high precision divide for larger numerators
 fixed32_1 div32_1_lhp(fixed32_1 numerator,fixed32_1 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_1 : MAX_FIXED32_1;
 	fixed64_1 buffer = ((fixed64_1)numerator*10)/(fixed64_1)denominator;
 	return (fixed32_1)buffer;
 }
 fixed32_2 div32_2_lhp(fixed32_2 numerator,fixed32_2 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_2 : MAX_FIXED32_2;
 	fixed64_1 buffer = ((fixed64_2)numerator*100)/(fixed64_2)denominator;
 	return (fixed32_2)buffer;
 }
 fixed32_3 div32_3_lhp(fixed32_3 numerator,fixed32_3 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_3 : MAX_FIXED32_3;
 	fixed64_1 buffer = ((fixed64_3)numerator*1000)/(fixed64_3)denominator;
 	return (fixed32_3)buffer;
 }
 fixed32_4 div32_4_lhp(fixed32_4 numerator,fixed32_4 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_4 : MAX_FIXED32_4;
 	fixed64_1 buffer = ((fixed64_4)numerator*10000)/(fixed64_4)denominator;
 	return (fixed32_4)buffer;
 }
@@ -120,21 +128,25 @@ fixed32_4 div32_4_lhp(fixed32_4 numerator,fixed32_4 denominator)
 //Fast, low precision divide for larger numerators
 fixed32_1 div32_1_llp(fixed32_1 numerator,fixed32_1 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_1 : MAX_FIXED32_1;
 	fixed32_1 buffer = (numerator/denominator)*10;
 	return buffer;
 }
 fixed32_2 div32_2_llp(fixed32_2 numerator,fixed32_2 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_2 : MAX_FIXED32_2;
 	fixed32_2 buffer = (numerator/denominator)*100;
 	return buffer;
 }
 fixed32_3 div32_3_llp(fixed32_3 numerator,fixed32_3 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_3 : MAX_FIXED32_3;
 	fixed32_3 buffer = (numerator/denominator)*1000;
 	return buffer;
 }
 fixed32_4 div32_4_llp(fixed32_4 numerator,fixed32_4 denominator)
 {
+    if(denominator == 0) return numerator<0? MIN_FIXED32_4 : MAX_FIXED32_4;
 	fixed32_4 buffer = (numerator/denominator)*10000;
 	return buffer;
 }
@@ -214,21 +226,25 @@ ufixed32_4 umul32_4_llp(ufixed32_4 x1,ufixed32_4 x2)
 //Fast, general purpose divide. numerator * (number of decimal places) cannot exceed 2^(32-1)
 ufixed32_1 udiv32_1(ufixed32_1 numerator,ufixed32_1 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_1;
 	ufixed32_1 buffer = (numerator*10)/(denominator);
 	return buffer;
 }
 ufixed32_2 udiv32_2(ufixed32_2 numerator,ufixed32_2 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_2;
 	ufixed32_2 buffer = (numerator*100)/(denominator);
 	return buffer;
 }
 ufixed32_3 udiv32_3(ufixed32_3 numerator,ufixed32_3 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_3;
 	ufixed32_3 buffer = (numerator*1000)/(denominator);
 	return buffer;
 }
 ufixed32_4 udiv32_4(ufixed32_4 numerator,ufixed32_4 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_4;
 	ufixed32_4 buffer = (numerator*10000)/(denominator);
 	return buffer;
 }
@@ -236,21 +252,25 @@ ufixed32_4 udiv32_4(ufixed32_4 numerator,ufixed32_4 denominator)
 //Slow, high precision divide for larger numerators
 ufixed32_1 udiv32_1_lhp(ufixed32_1 numerator,ufixed32_1 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_1;
 	fixed64_1 buffer = ((fixed64_1)numerator*10)/(fixed64_1)denominator;
 	return (ufixed32_1)buffer;
 }
 ufixed32_2 udiv32_2_lhp(ufixed32_2 numerator,ufixed32_2 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_2;
 	fixed64_1 buffer = ((fixed64_2)numerator*100)/(fixed64_2)denominator;
 	return (ufixed32_2)buffer;
 }
 ufixed32_3 udiv32_3_lhp(ufixed32_3 numerator,ufixed32_3 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_3;
 	fixed64_1 buffer = ((fixed64_3)numerator*1000)/(fixed64_3)denominator;
 	return (ufixed32_3)buffer;
 }
 ufixed32_4 udiv32_4_lhp(ufixed32_4 numerator,ufixed32_4 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_4;
 	fixed64_1 buffer = ((fixed64_4)numerator*10000)/(fixed64_4)denominator;
 	return (ufixed32_4)buffer;
 }
@@ -258,21 +278,25 @@ ufixed32_4 udiv32_4_lhp(ufixed32_4 numerator,ufixed32_4 denominator)
 //Fast, low precision divide for larger numerators
 ufixed32_1 udiv32_1_llp(ufixed32_1 numerator,ufixed32_1 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_1;
 	ufixed32_1 buffer = (numerator/denominator)*10;
 	return buffer;
 }
 ufixed32_2 udiv32_2_llp(ufixed32_2 numerator,ufixed32_2 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_2;
 	ufixed32_2 buffer = (numerator/denominator)*100;
 	return buffer;
 }
 ufixed32_3 udiv32_3_llp(ufixed32_3 numerator,ufixed32_3 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_3;
 	ufixed32_3 buffer = (numerator/denominator)*1000;
 	return buffer;
 }
 ufixed32_4 udiv32_4_llp(ufixed32_4 numerator,ufixed32_4 denominator)
 {
+    if(denominator == 0) return MAX_FIXED32_4;
 	ufixed32_4 buffer = (numerator/denominator)*10000;
 	return buffer;
 }
@@ -325,41 +349,49 @@ ufixed64_4 umul64_4(ufixed64_4 x1, ufixed64_4 x2)
 
 fixed64_1 div64_1(fixed64_1 numerator, fixed64_1 denominator)
 {
+  if(denominator == 0) return numerator < 0? MIN_FIXED64_1 : MAX_FIXED64_1;
   return (numerator * 10)/denominator;
 }
 
 fixed64_2 div64_2(fixed64_2 numerator, fixed64_2 denominator)
 {
+  if(denominator == 0) return numerator < 0? MIN_FIXED64_2 : MAX_FIXED64_2;
   return (numerator * 100)/denominator;
 }
 
 fixed64_3 div64_3(fixed64_3 numerator, fixed64_3 denominator)
 {
+  if(denominator == 0) return numerator < 0? MIN_FIXED64_3 : MAX_FIXED64_3;
   return (numerator * 1000)/denominator;
 }
 
 fixed64_4 div64_4(fixed64_4 numerator, fixed64_4 denominator)
 {
+  if(denominator == 0) return numerator < 0? MIN_FIXED64_4 : MAX_FIXED64_4;
   return (numerator * 10000)/denominator;
 }
 
 
 ufixed64_1 udiv64_1(ufixed64_1 numerator, ufixed64_1 denominator)
 {
+  if(denominator == 0) return MAX_UFIXED64_1;
   return (numerator * 10)/denominator;
 }
 
 ufixed64_2 udiv64_2(ufixed64_2 numerator, ufixed64_2 denominator)
 {
+  if(denominator == 0) return MAX_UFIXED64_2;
   return (numerator * 100)/denominator;
 }
 
 ufixed64_3 udiv64_3(ufixed64_3 numerator, ufixed64_3 denominator)
 {
+  if(denominator == 0) return MAX_UFIXED64_3;
   return (numerator * 1000)/denominator;
 }
 
 ufixed64_4 udiv64_4(ufixed64_4 numerator, ufixed64_4 denominator)
 {
+  if(denominator == 0) return MAX_UFIXED64_4;
   return (numerator * 10000)/denominator;
 }
