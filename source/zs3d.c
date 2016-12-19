@@ -263,7 +263,7 @@ void renderWall(ray inputRay,uint32_t i,uint8_t interface)
             case 1:
                 //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
                 //Interface1_DrawVLine(i,45-height/2,45+height/2,0xFFFF);
-                Interface_DrawLine(interfaceList[0],i,45-height/2,i,45+height/2,BM_RGBTo565(214,198,80));
+                Interface_DrawLine(interfaceList[0],i,45-height/2,i,45+height/2,BM_BGRTo565(214,198,80));
                 break;
             case 2:
                 //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
@@ -275,9 +275,9 @@ void renderWall(ray inputRay,uint32_t i,uint8_t interface)
             switch(interface)
             {
             case 1:
-                //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,BM_RGBTo565(127,127,127));
-                //Interface1_DrawVLine(i,45-height/2,45+height/2,BM_RGBTo565(127,127,127));
-                Interface_DrawLine(interfaceList[0],i,45-height/2,i,45+height/2,BM_RGBTo565(127,127,127));
+                //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,BM_BGRTo565(127,127,127));
+                //Interface1_DrawVLine(i,45-height/2,45+height/2,BM_BGRTo565(127,127,127));
+                Interface_DrawLine(interfaceList[0],i,45-height/2,i,45+height/2,BM_BGRTo565(127,127,127));
                 break;
             case 2:
                 //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
@@ -425,7 +425,7 @@ void renderWorld(void)
     if(player1.active)
     {
         //Draw black rectangle
-        Interface_DirectFillRect(interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,BM_RGBTo565(255,0,0));
+        Interface_DirectFillRect(interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,BM_BGRTo565(255,0,0));
         //Draw Ammo
         Interface_SetCursor(interfaceList[0],1,10);
         Interface_OutString(interfaceList[0],(uint8_t*)player1.weapons[player1.activeWeapon].data->name);
@@ -820,7 +820,7 @@ void actIntelligence(fixed32_3 dT)
                                 {
                                     player1.active = 0; //Player is deed
                                 }
-                                Interface_DirectFillRect(interfaceList[0],0,0,160,30,BM_RGBTo565(255,17,45));
+                                Interface_DirectFillRect(interfaceList[0],0,0,160,30,BM_BGRTo565(255,17,45));
                             }
                         }
                     }
