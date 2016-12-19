@@ -1,7 +1,8 @@
 #ifndef __IMAGE_H__
 #define __IMAGE_H__
 
-#include "../../brandonware/BrandonBufferManager.h"
+#include <stdint.h>
+#include "brandonware/bbufman.h"
 
 
 
