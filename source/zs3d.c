@@ -218,7 +218,6 @@ void RenderHandler(void)
 {
     if (stateGraphics == MENU)
     {
-        //Interface1_LCDFillRect(0,90,160,38,0xFFFF);
         Interface_SetCursor(interfaceList[0],0,6);
         Interface_OutString(interfaceList[0],"Press A to play");
     }
@@ -420,12 +419,11 @@ void renderWorld(void)
     Interface_DrawBuffer(interfaceList[0]);
     //Interface2_DrawBuffer();
 
-    Interface_LCDFillRect(interfaceList[0],0,90,160,38,0x0000);
-    //Interface1_LCDFillRect(0,100,80*player1.health/MAX_HEALTH,10,BM_RGBTo565(255,0,0));
+    Interface_DirectFillRect(interfaceList[0],0,90,160,38,0x0000);
     if(player1.active)
     {
         //Draw black rectangle
-        Interface_LCDFillRect(interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,BM_RGBTo565(255,0,0));
+        Interface_DirectFillRect(interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,BM_RGBTo565(255,0,0));
         //Draw Ammo
         Interface_SetCursor(interfaceList[0],1,10);
         Interface_OutString(interfaceList[0],(uint8_t*)player1.weapons[player1.activeWeapon].data->name);
@@ -468,7 +466,6 @@ void renderWorld(void)
         Interface_OutString(interfaceList[0],str);
 
     }
-    //Interface1_LCDFillRect(160-(80*player1.health/MAX_HEALTH),100,80-80*player1.health/MAX_HEALTH,10,0xFFFF);
 
     /*
     Interface1_LCDSetCursor(0,11);
@@ -821,9 +818,7 @@ void actIntelligence(fixed32_3 dT)
                                 {
                                     player1.active = 0; //Player is deed
                                 }
-                                Interface1_LCDFillRect(0,0,160,30,BM_RGBTo565(255,17,45));
-                                //Interface1_LCDFillRect(0,30,160,30,BM_RGBTo565(255,17,45));
-                                //Interface1_LCDFillRect(0,60,160,30,BM_RGBTo565(255,17,45));
+                                Interface_DirectFillRect(interfaceList[0],0,0,160,30,BM_RGBTo565(255,17,45));
                             }
                         }
                     }
