@@ -1,3 +1,5 @@
+#include <SDL2/SDL.h>
+
 #include "platform/interface.h"
 #include "brandonware/btypes.h"
 #include "brandonware/bbufman.h"

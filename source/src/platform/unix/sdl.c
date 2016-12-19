@@ -34,8 +34,6 @@ void window_init(const unsigned short splash[])
 {
     if(!window)
     {
-        sdl_init();
-
         printf("Created a window!\n");
         window = SDL_CreateWindow("zs3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DISPLAY_WIDTH, DISPLAY_HEIGHT, SDL_WINDOW_SHOWN);
 

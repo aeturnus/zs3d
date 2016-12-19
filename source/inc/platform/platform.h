@@ -13,6 +13,12 @@
 typedef struct TaskHandle_str * TaskHandle;
 
 /**
+ * Intialize all subsystems required
+ */
+int Systems_Init(void);
+
+
+/**
  * Registers a task to be periodically run
  * @param func Function pointer for task to be run
  * @param func Period for task to be run in microseconds

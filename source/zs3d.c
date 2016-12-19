@@ -1266,6 +1266,8 @@ TaskHandle render;
 TaskHandle input;
 int main(void)
 {
+    Systems_Init();
+
     timer   = PeriodicTask_Register(&TimerHandler,NULL,1000);
     render  = PeriodicTask_Register(&RenderHandler,NULL,50000);
     input   = PeriodicTask_Register(&InputHandler,NULL,5000);

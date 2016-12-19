@@ -6,6 +6,11 @@
 
 #include "sdl.h"
 
+int Systems_Init(void)
+{
+    sdl_init();
+}
+
 typedef struct TaskHandle_str
 {
     int valid;
@@ -37,8 +42,6 @@ static int PeriodicTask_Runner(void * param)
 
 TaskHandle PeriodicTask_Register( void * func(void *), void * param, uint32_t period )
 {
-    sdl_init();
-
     for(int i = 0; i < NUM_TASKHANDLE; i++)
     {
         if(!table[i].valid)
