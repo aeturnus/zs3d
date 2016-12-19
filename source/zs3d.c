@@ -1210,8 +1210,12 @@ void startGame(void)
 {
     player1.entityData.pos.x = 10000;
     player1.entityData.pos.y = 10000;
+    player1.entityData.vel.x = 0;
+    player1.entityData.vel.y = 0;
     player2.entityData.pos.x = 30000;
     player2.entityData.pos.y = 30000;
+    player2.entityData.vel.x = 0;
+    player2.entityData.vel.y = 0;
     RC_InitWorld(&myWorld,worldArray,W_WIDTH,W_HEIGHT);
     RC_InitCamera(&camera1,player1.entityData.pos.x,player1.entityData.pos.y,0,90000,COLUMNS,ROWS,64000,rayArray1);
     RC_InitCamera(&camera2,player2.entityData.pos.x,player2.entityData.pos.y,0,90000,COLUMNS,ROWS,64000,rayArray2);
@@ -1258,6 +1262,8 @@ void startGame(void)
                 break;
             case PLAY:
                 actWorld();
+                for(int i = 0; i < 0xFFFFFF; i++);
+                //printf("x: %d, y: %d, r: %d, vx: %d, vy: %d\n", player1.entityData.pos.x, player1.entityData.pos.y, player1.entityData.rot,player1.entityData.vel.x, player1.entityData.vel.y );
                 break;
         }
     }

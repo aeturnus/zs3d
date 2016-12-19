@@ -141,8 +141,16 @@ void Interface_OutString(Interface interface, uint8_t* string)
 
 int32_t Interface_GetAnalog(Interface interface, uint8_t axis)
 {
-    int index = axis - 'x';
-    return index < 1? interface->analog[index] : 0xDEADBEEF;
+    switch(axis)
+    {
+    case 'x':
+        return interface->analog[0];
+        break;
+    case 'y':
+        return interface->analog[1];
+        break;
+    }
+    return 0xDEADBEEF;
 }
 
 uint8_t Interface_GetDigital(Interface interface, uint8_t button)
