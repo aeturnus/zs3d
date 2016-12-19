@@ -1,15 +1,14 @@
-// Lab8.c
-// Runs on LM4F120 or TM4C123
-// Student names: change this to your names or look very silly
-// Last modification date: change this to the last modification date or look very silly
-// Last Modified: 3/6/2015
-
-// Analog Input connected to PE2=ADC1
-// displays on Sitronox ST7735
-// PF3, PF2, PF1 are heartbeats
+/*
+ * Zombie Survival 3D
+ * This was a project originally created by two freshmen at The University of Texas at Austin,
+ * Brandon Nguyen and Ryan Syed for EE 319K: Introduction to Embedded Systems.
+ * This was originally meant to be run baremetal on TM4C microcontrollers, which may show in som
+ * interesting design choices (e.g. lack of standard library; no dynamic memory)
+ *
+ * This file represents the core game logic of project.
+ */
 
 #include <stdint.h>
-#include <stdio.h>
 
 #include "brandonware/btypes.h"
 #include "brandonware/bmath.h"
