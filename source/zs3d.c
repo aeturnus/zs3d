@@ -219,8 +219,8 @@ void RenderHandler(void)
     if (stateGraphics == MENU)
     {
         //Interface1_LCDFillRect(0,90,160,38,0xFFFF);
-        Interface_SetCursor(&interfaceList[0],0,6);
-        Interface_OutString(&interfaceList[0],"Press A to play");
+        Interface_SetCursor(interfaceList[0],0,6);
+        Interface_OutString(interfaceList[0],"Press A to play");
     }
     else if(stateGraphics == RAYCASTING)
     {
@@ -233,12 +233,12 @@ void InputHandler(void)
 {
     if(player1Present)
     {
-        Interface_GetInput(&interfaceList[0]);
+        Interface_GetInput(interfaceList[0]);
     }
     else
     {
-        Interface_Ping(&interfaceList[0]);
-        player1Present = Interface_IsPresent(&interfaceList[0]);
+        Interface_Ping(interfaceList[0]);
+        player1Present = Interface_IsPresent(interfaceList[0]);
     }
 }
 
@@ -263,7 +263,7 @@ void renderWall(ray inputRay,uint32_t i,uint8_t interface)
             case 1:
                 //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
                 //Interface1_DrawVLine(i,45-height/2,45+height/2,0xFFFF);
-                Interface_DrawLine(&interfaceList[0],i,45-height/2,i,45+height/2,BM_RGBTo565(214,198,80));
+                Interface_DrawLine(interfaceList[0],i,45-height/2,i,45+height/2,BM_RGBTo565(214,198,80));
                 break;
             case 2:
                 //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
@@ -277,7 +277,7 @@ void renderWall(ray inputRay,uint32_t i,uint8_t interface)
             case 1:
                 //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,BM_RGBTo565(127,127,127));
                 //Interface1_DrawVLine(i,45-height/2,45+height/2,BM_RGBTo565(127,127,127));
-                Interface_DrawLine(&interfaceList[0],i,45-height/2,i,45+height/2,BM_RGBTo565(127,127,127));
+                Interface_DrawLine(interfaceList[0],i,45-height/2,i,45+height/2,BM_RGBTo565(127,127,127));
                 break;
             case 2:
                 //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
@@ -289,12 +289,12 @@ void renderWall(ray inputRay,uint32_t i,uint8_t interface)
 
 void renderWorld(void)
 {
-    Interface_ClearBuffer(&interfaceList[0]);
+    Interface_ClearBuffer(interfaceList[0]);
     //Interface2_ClearBuffer();
 
     //Draw sky and ground
-    Interface_DirectFillRect(&interfaceList[0],0,0,160,45,0xBEEF);     //Floor
-    Interface_DirectFillRect(&interfaceList[0],0,45,160,90,0x1111);    //Ceiling
+    Interface_DirectFillRect(interfaceList[0],0,0,160,45,0xBEEF);     //Floor
+    Interface_DirectFillRect(interfaceList[0],0,45,160,90,0x1111);    //Ceiling
     //Interface2_FillRect(0,0,160,45,0xBEEF);     //Floor
     //Interface2_FillRect(0,45,160,90,0x1111);    //Ceiling
 
@@ -389,10 +389,10 @@ void renderWorld(void)
         switch(player1.weapons[player1.activeWeapon].state)
         {
             case READY:
-                Interface_ScaleSpriteOver(&interfaceList[0], 120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<6)/256,1000,1000,player1.weapons[player1.activeWeapon].data->readySprite);
+                Interface_ScaleSpriteOver(interfaceList[0], 120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<6)/256,1000,1000,player1.weapons[player1.activeWeapon].data->readySprite);
                 break;
             case ATTACK:
-                Interface_ScaleSpriteOver(&interfaceList[0],120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<8)/256,1000,1000,player1.weapons[player1.activeWeapon].data->fireSprite);
+                Interface_ScaleSpriteOver(interfaceList[0],120+sineFix(player1.paces<<8)/256,5+cosineFix(player1.paces<<8)/256,1000,1000,player1.weapons[player1.activeWeapon].data->fireSprite);
                 break;
             case RELOAD:
                 break;
@@ -413,25 +413,25 @@ void renderWorld(void)
                 crossIndex = CROSS_RIFLE;
                 break;
         }
-        Interface_ScaleSpriteOver(&interfaceList[0],80,45,1000,1000,crossIndex);
+        Interface_ScaleSpriteOver(interfaceList[0],80,45,1000,1000,crossIndex);
     }
 
 
-    Interface_DrawBuffer(&interfaceList[0]);
+    Interface_DrawBuffer(interfaceList[0]);
     //Interface2_DrawBuffer();
 
-    Interface_LCDFillRect(&interfaceList[0],0,90,160,38,0x0000);
+    Interface_LCDFillRect(interfaceList[0],0,90,160,38,0x0000);
     //Interface1_LCDFillRect(0,100,80*player1.health/MAX_HEALTH,10,BM_RGBTo565(255,0,0));
     if(player1.active)
     {
         //Draw black rectangle
-        Interface_LCDFillRect(&interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,BM_RGBTo565(255,0,0));
+        Interface_LCDFillRect(interfaceList[0],160-80*player1.health/MAX_HEALTH,100,80*player1.health/MAX_HEALTH,10,BM_RGBTo565(255,0,0));
         //Draw Ammo
-        Interface_SetCursor(&interfaceList[0],1,10);
-        Interface_OutString(&interfaceList[0],(uint8_t*)player1.weapons[player1.activeWeapon].data->name);
+        Interface_SetCursor(interfaceList[0],1,10);
+        Interface_OutString(interfaceList[0],(uint8_t*)player1.weapons[player1.activeWeapon].data->name);
         if(player1.weapons[player1.activeWeapon].data->type!=MELEE && player1.active)
         {
-            Interface_SetCursor(&interfaceList[0],1,11);
+            Interface_SetCursor(interfaceList[0],1,11);
             uint32_t ammoCount;
             switch(player1.weapons[player1.activeWeapon].data->type)
             {
@@ -448,24 +448,24 @@ void renderWorld(void)
                     break;
             }
             sprintf(str,"%d/%d",player1.weapons[player1.activeWeapon].magCur,ammoCount);
-            Interface_OutString(&interfaceList[0],str);
+            Interface_OutString(interfaceList[0],str);
         }
     }
 
     if(!player1.active)
     {
 
-        Interface_SetCursor(&interfaceList[0],0,9);
-        Interface_OutString(&interfaceList[0],"You're dead...");
-        Interface_SetCursor(&interfaceList[0],0,10);
+        Interface_SetCursor(interfaceList[0],0,9);
+        Interface_OutString(interfaceList[0],"You're dead...");
+        Interface_SetCursor(interfaceList[0],0,10);
         sprintf(str,"Kills: %d",player1.kills);
-        Interface_OutString(&interfaceList[0],str);
-        Interface_SetCursor(&interfaceList[0],0,11);
+        Interface_OutString(interfaceList[0],str);
+        Interface_SetCursor(interfaceList[0],0,11);
         sprintf(str,"Time: %d seconds",player1Timer/1000);
-        Interface_OutString(&interfaceList[0],str);
-        Interface_SetCursor(&interfaceList[0],0,12);
+        Interface_OutString(interfaceList[0],str);
+        Interface_SetCursor(interfaceList[0],0,12);
         sprintf(str,"Score: %d",player1Timer/100 + player1.kills * 10 + bossKills * 1000);
-        Interface_OutString(&interfaceList[0],str);
+        Interface_OutString(interfaceList[0],str);
 
     }
     //Interface1_LCDFillRect(160-(80*player1.health/MAX_HEALTH),100,80-80*player1.health/MAX_HEALTH,10,0xFFFF);
@@ -626,28 +626,28 @@ void actIntelligence(fixed32_3 dT)
     fixed32_3 distance;
     if(player1Present && player1.active)
     {
-        player1.paces += (1 + mul32_3(Interface_GetAnalog(&interfaceList[0],'y'),player1.speed)/2) * dT/1000;
-        if(Interface_GetDigital(&interfaceList[0],'l'))
+        player1.paces += (1 + mul32_3(Interface_GetAnalog(interfaceList[0],'y'),player1.speed)/2) * dT/1000;
+        if(Interface_GetDigital(interfaceList[0],'l'))
         {
-            player1.entityData.rot += Interface_GetAnalog(&interfaceList[0],'x')*dT/100;
+            player1.entityData.rot += Interface_GetAnalog(interfaceList[0],'x')*dT/100;
         }
         else
         {
-            player1.entityData.rot += Interface_GetAnalog(&interfaceList[0],'x')*dT/25;
-            player1.entityData.vel = polarToVector(mul32_3(Interface_GetAnalog(&interfaceList[0],'y'),player1.speed),player1.entityData.rot);
+            player1.entityData.rot += Interface_GetAnalog(interfaceList[0],'x')*dT/25;
+            player1.entityData.vel = polarToVector(mul32_3(Interface_GetAnalog(interfaceList[0],'y'),player1.speed),player1.entityData.rot);
         }
-        if(Interface_GetDigital(&interfaceList[0],'x'))
+        if(Interface_GetDigital(interfaceList[0],'x'))
         {
             //myCamera.pos.x += mul32_3(1000,cosineFix(myCamera.direction-90000));
             player1.entityData.vel.x += mul32_3(player1.speed,cosineFix(player1.entityData.rot - 90000))*dT/100;
             player1.entityData.vel.y += mul32_3(player1.speed,sineFix(player1.entityData.rot - 90000))*dT/100;
         }
-        if(Interface_GetDigital(&interfaceList[0],'b'))
+        if(Interface_GetDigital(interfaceList[0],'b'))
         {
             player1.entityData.vel.x += mul32_3(player1.speed,cosineFix(player1.entityData.rot + 90000))*dT/100;
             player1.entityData.vel.y += mul32_3(player1.speed,sineFix(player1.entityData.rot + 90000))*dT/100;
         }
-        if(Interface_GetDigital(&interfaceList[0],'r'))
+        if(Interface_GetDigital(interfaceList[0],'r'))
         {
             wpnPtr = &player1.weapons[player1.activeWeapon];
             if((digitalHold1&HOLD_R) == 0 || wpnPtr->data->fire == AUTO)
@@ -710,7 +710,7 @@ void actIntelligence(fixed32_3 dT)
         {
             digitalHold1 &= ~(digitalHold1&HOLD_R);
         }
-        if(Interface_GetDigital(&interfaceList[0],'a'))
+        if(Interface_GetDigital(interfaceList[0],'a'))
         {
                 wpnPtr = &player1.weapons[player1.activeWeapon];
                 if(wpnPtr->state == READY)
@@ -736,7 +736,7 @@ void actIntelligence(fixed32_3 dT)
                     }
                 }
         }
-        if(Interface_GetDigital(&interfaceList[0],'y'))
+        if(Interface_GetDigital(interfaceList[0],'y'))
         {
             if(!(digitalHold1&HOLD_Y))
             {
@@ -1221,7 +1221,7 @@ void startGame(void)
     stateGlobal = TITLE;
     while(globalTimer < 2000);
     while(!player1Present);
-    Interface_ClearBuffer(&interfaceList[0]);
+    Interface_ClearBuffer(interfaceList[0]);
     uint32_t i = 0;
 
     //Deactivate all entities
@@ -1246,7 +1246,7 @@ void startGame(void)
         switch(stateGlobal)
         {
             case TITLE:
-                if(Interface_GetDigital(&interfaceList[0],'a'))
+                if(Interface_GetDigital(interfaceList[0],'a'))
                 {
                     // Random_Init(SysTick_Current^globalTimer);
                     Music_PauseSong();
@@ -1275,7 +1275,7 @@ int main(void)
     render  = PeriodicTask_Register(&RenderHandler,50000);
     input   = PeriodicTask_Register(&InputHandler,5000);
 
-    Interface_Init(&interfaceList[0]);
+    interfaceList[0] = Interface_New();
     Music_Init();
     Music_LoadSong(4);
     Music_PlaySong();
