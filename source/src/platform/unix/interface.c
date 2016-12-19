@@ -167,7 +167,19 @@ uint8_t Interface_GetDigital(Interface interface, uint8_t button)
 extern int gameActive;
 void Interface_GetInput( Interface interface )
 {
+    interface->analog[0] = 0;
+    interface->analog[1] = 0;
+    interface->a = 0;
+    interface->b = 0;
+    interface->x = 0;
+    interface->y = 0;
+    interface->l = 0;
+    interface->r = 0;
+
     SDL_Event event;
+    int shift   = 0;
+    int alt     = 0;
+    int ctrl    = 0;
     while(SDL_PollEvent(&event))
     {
         switch(event.type)
@@ -175,8 +187,41 @@ void Interface_GetInput( Interface interface )
         case SDL_QUIT:
             gameActive = 0;
             break;
+        case SDL_KEYDOWN:
+        case SDL_KEYUP:
+            shift = event.key.keysym.mod & KMOD_SHIFT   != 0;
+            alt   = event.key.keysym.mod & KMOD_ALT     != 0;
+            ctrl  = event.key.keysym.mod & KMOD_CTRL    != 0;
+            break;
         }
     }
+    const uint8_t * keyStates = SDL_GetKeyboardState(NULL);
+
+    if( keyStates[SDL_SCANCODE_A] )
+        interface->analog[0] = -1000;
+    else if( keyStates[SDL_SCANCODE_D])
+        interface->analog[0] = +1000;
+
+    if( keyStates[SDL_SCANCODE_S] )
+        interface->analog[1] = -1000;
+    else if( keyStates[SDL_SCANCODE_W])
+        interface->analog[1] = +1000;
+
+    interface->a = keyStates[SDL_SCANCODE_K];
+    interface->b = keyStates[SDL_SCANCODE_L];
+    interface->x = keyStates[SDL_SCANCODE_J];
+    interface->y = keyStates[SDL_SCANCODE_I];
+    interface->l = keyStates[SDL_SCANCODE_N];
+    interface->r = keyStates[SDL_SCANCODE_SPACE];
+    printf("x-axis: %d, y-axis: %d, a: %d, b: %d, x: %d, y: %d, l: %d, r: %d\n",
+        interface->analog[0],
+        interface->analog[1],
+        interface->a,
+        interface->b,
+        interface->x,
+        interface->y,
+        interface->l,
+        interface->r);
 }
 
 void Interface_DrawBitmap( Interface interface, int32_t x,int32_t y, int32_t w, int32_t h, uint16_t index)
