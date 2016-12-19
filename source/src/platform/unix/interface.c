@@ -2,11 +2,14 @@
 #include "brandonware/btypes.h"
 #include "brandonware/bbufman.h"
 #include "resources/image.h"
+// evil dance of variables in header files
 
-#define DISPLAY_WIDTH 160
-#define DISPLAY_HEIGHT 128
+extern int SCALE_FACTOR;
 
-#define BUFFER_WIDTH DISPLAY_WIDTH
+#define DISPLAY_WIDTH LCD_WIDTH * SCALE_FACTOR
+#define DISPLAY_HEIGHT LCD_HEIGHT * SCALE_FACTOR
+
+#define BUFFER_WIDTH LCD_WIDTH
 #define BUFFER_HEIGHT 90
 
 typedef struct interface_str
@@ -20,12 +23,19 @@ typedef struct interface_str
     unsigned int l : 1;
     unsigned int r : 1;
 
-    uint16_t buffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+    uint16_t buffer[BUFFER_WIDTH * BUFFER_HEIGHT];
     buffer16 bufman;
 } Interface_Rec;
 
+static int interfaceCounter = 0;
+
 Interface Interface_New( void )
 {
+    if(interfaceCounter == 0)
+        window_init(DISPLAY_WIDTH,DISPLAY_HEIGHT,splash);
+
+    interfaceCounter += 1;
+
     Interface interface = malloc(sizeof(Interface_Rec));
     BM_BufferInit_16(&interface->bufman, interface->buffer, BUFFER_WIDTH, BUFFER_HEIGHT);
 
@@ -44,7 +54,15 @@ Interface Interface_New( void )
 
 void Interface_Done( Interface interface )
 {
-    free(interface);
+    if(interface && interfaceCounter > 0)
+    {
+        free(interface);
+        interfaceCounter -= 1;
+        if(interfaceCounter == 0)
+        {
+            window_cleanup();
+        }
+    }
 }
 
 void Interface_Reset( Interface interface )
@@ -60,6 +78,11 @@ void Interface_Ping( Interface interface )
 int Interface_IsPresent( Interface interface )
 {
     return interface->present;
+}
+
+void Interface_UpdateScreen( Interface interface )
+{
+    window_refresh();
 }
 
 void Interface_ClearScreen( Interface interface )

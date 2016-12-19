@@ -224,6 +224,7 @@ void RenderHandler(void)
     {
       renderWorld();
     }
+    Interface_UpdateScreen(interfaceList[0]);
 }
 
 //Requests user input

@@ -318,7 +318,8 @@ uint16_t BM_RGBTo565(uint8_t r, uint8_t g, uint8_t b)
 {
   // extract upper 5 bits of blue, 6 of green
   // since r is going to be at bottom, truncate w/ shift
-  return ((b & 0xF8) << 8) | ((g & 0xFC) << 3) | (r >> 3);
+  //return ((b & 0xF8) << 8) | ((g & 0xFC) << 3) | (r >> 3);
+  return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
 
 // ----- Color Darken -----

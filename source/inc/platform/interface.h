@@ -4,6 +4,9 @@
 #include <stdint.h>
 #include "brandonware/btypes.h"
 
+#define LCD_WIDTH 160
+#define LCD_HEIGHT 128
+
 typedef struct interface_str * Interface;
 
 Interface Interface_New( void );
@@ -14,6 +17,8 @@ void Interface_Reset( Interface interface );
 void Interface_Ping( Interface interface );
 
 int Interface_IsPresent( Interface interface );
+
+void Interface_UpdateScreen( Interface interface );
 
 void Interface_ClearScreen( Interface interface );
 

@@ -3,7 +3,7 @@ PLATFORM = unix
 
 CC = gcc
 LD = ld
-CFLAGS =-Wall -Wextra
+CFLAGS =-Wall -Wextra -g
 SOURCES = $(wildcard *.c) $(wildcard src/brandonware/*.c) $(wildcard src/platform/$(PLATFORM)/*.c)
 EXECUTABLE = zs3d
 INCLUDE = inc
