@@ -24,11 +24,11 @@ clean:
 	rm -r $(OBJDIR)
 	rm $(EXECUTABLE)
 
-test:
+test: $(EXECUTABLE)
 	./$(EXECUTABLE)
 
-mem:
+mem: $(EXECUTABLE)
 	valgrind --leak-check=yes ./$(EXECUTABLE)
 
-debug:
+debug: $(EXECUTABLE)
 	gdb ./$(EXECUTABLE)
