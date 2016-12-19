@@ -23,7 +23,7 @@ void sdl_init(void)
 {
     if(!sdl_initialized)
     {
-        if( SDL_Init(SDL_INIT_VIDEO) < 0 )
+        if( SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0 )
             fprintf(stderr,"Error: could not initialized SDL\n");
         else
             sdl_initialized = 1;

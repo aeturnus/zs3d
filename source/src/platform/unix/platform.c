@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdint.h>
 
 #include <SDL2/SDL.h>
 
@@ -18,7 +19,7 @@ typedef struct TaskHandle_str
     uint32_t period;
     void (*function)(void*);
     void * param;
-    SDL_Thread *thread;
+    SDL_TimerID timerID;
 } TaskHandle_Rec;
 
 #define NUM_TASKHANDLE 4
@@ -26,18 +27,14 @@ static TaskHandle_Rec table[NUM_TASKHANDLE] = {{0,0},{0,0},{0,0},{0,0}};
 
 static allocs = 0;
 
-static int PeriodicTask_Runner(void * param)
+static uint32_t PeriodicTask_TimerRunner(uint32_t interval, void * param)
 {
     TaskHandle handle = (TaskHandle) param;
-    while(handle->valid)
-    {
-        if(handle->enabled)
-        {
-            handle->function(handle->param);
-        }
-        SDL_Delay(handle->period/1000);
-    }
-    return 0;
+    if(!handle->valid)
+        return 0;
+    if(handle->enabled)
+        handle->function(handle->param);
+    return 1;
 }
 
 TaskHandle PeriodicTask_Register( void * func(void *), void * param, uint32_t period )
@@ -51,8 +48,8 @@ TaskHandle PeriodicTask_Register( void * func(void *), void * param, uint32_t pe
             table[i].period = period;
             table[i].function = func;
             table[i].param = param;
-            // create thread
-            table[i].thread = SDL_CreateThread(PeriodicTask_Runner, "", &table[i]);
+            // create timer
+            table[i].timerID = SDL_AddTimer(period/1000, PeriodicTask_TimerRunner, &table[i]);
 
             return &table[i];
         }
