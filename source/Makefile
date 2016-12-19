@@ -1,4 +1,6 @@
 PLATFORM = unix
+# planned targets: unix, windows, tm4c123
+
 CC = gcc
 LD = ld
 CFLAGS =-Wall -Wextra
@@ -9,12 +11,16 @@ OBJDIR = obj
 
 OBJECTS = $(SOURCES:.c=.o)
 
+ifeq ($(PLATFORM),unix)
+LIBS = -lSDL2
+endif
+
 .c.o:
 	mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -I$(INCLUDE) -D$(PLATFORM) -c $< -o $(OBJDIR)/$(@F)
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(EXECUTABLE) $(addprefix $(OBJDIR)/,$(notdir $(OBJECTS)))
+	$(CC) $(CFLAGS) $(LIBS) -o $(EXECUTABLE) $(addprefix $(OBJDIR)/,$(notdir $(OBJECTS)))
 
 
 all: $(EXECUTABLE)
