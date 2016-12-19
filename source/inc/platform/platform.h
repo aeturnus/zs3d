@@ -30,4 +30,7 @@ void PeriodicTask_Stop( TaskHandle handle );
 void PeriodicTask_Terminate( TaskHandle handle );
 
 
+uint32_t Random32(void);
+
+
 #endif // __PLATFORM_H__
