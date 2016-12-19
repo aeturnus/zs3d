@@ -18,7 +18,6 @@
 #include "brandonware/bphysics.h"
 
 
-//#include "../random.h"
 #include "gamengine.h"
 #include "gamedata.h"
 
@@ -354,7 +353,7 @@ void renderWorld(void)
         uint16_t spriteNum;
         if(enemyI.active)
         {
-            uint8_t temp = Random()%2;
+            uint8_t temp = Random32()%2;
             switch(enemyI.weapon.state)
             {
                 case READY:
@@ -559,9 +558,8 @@ void spawnProjectile(weapon* wpnPtr,player* owner)
     {
         if(!projI.active)
         {
-            PF_EOR(3);
             fixed32_3 angleOff = mul32_3(Random32()%1000,wpnPtr->data->dispersion/2);
-            angleOff *= Random()&1?1:-1;
+            angleOff *= Random32()&1?1:-1;
             fixed32_3 angle = owner->entityData.rot + angleOff;    //Get a dispersion angle
             projI.active = 1;                                         //Activate this projectile
             projI.damage = wpnPtr->data->damage;
@@ -596,7 +594,6 @@ void actDirector(void)
         {
             spawnEnemyRandom(0);
         }
-        PF_EOR(3);
         directorTimer1 = 0;
     }
     if(directorTimer2>=90000)
@@ -669,7 +666,6 @@ void actIntelligence(fixed32_3 dT)
                                 distance = getDistance2D(&player1.entityData.pos,&enemyI.entityData.pos);
                                 if(distance <= wpnPtr->data->range)
                                 {
-                                    PF_EOR(3);
                                     enemyI.health -= wpnPtr->data->damage;
                                     if(enemyI.health<0)
                                     {
@@ -1062,7 +1058,6 @@ void actWorld(void)
                 {
                     if(PH_CheckCollision(&(curProj->entityData),&(curEnemy->entityData)))
                     {
-                        PF_EOR(2);
                         curEnemy->health -= curProj->damage;    //If there's a hit, enemy takes damage
                         curProj->active = 0;
                         if(curEnemy->health <= 0)
