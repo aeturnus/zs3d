@@ -369,7 +369,8 @@ void renderWorld(void)
         }
         else
         {
-            spriteNum = enemyI.data->frameDeath;
+            if(enemyI.data) // #hack
+                spriteNum = enemyI.data->frameDeath;
         }
 
         if(angleOff < camera1.FOV/2 )
@@ -931,6 +932,7 @@ void actWorld(void)
         }
     }
 
+    /*
     wpnPtr = &player2.weapons[player2.activeWeapon];
     playerPtr = &player2;
     if(wpnPtr->fireTimer < wpnPtr->data->fireRate && wpnPtr->state == ATTACK)
@@ -992,7 +994,7 @@ void actWorld(void)
             Music_PlaySound(SND_GUNCHAMBER);
         }
     }
-
+    */
 
     //Enemy calculations
     for(i = 0; i<N_ENEMIES; i++)
