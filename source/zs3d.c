@@ -376,7 +376,7 @@ void renderWorld(void)
         {
             if(distance < (camera1.rayArray[(camera1.FOV/2-angleOff)/camera1.dAngle].distance))
             {
-                Interface1_ScaleSpriteOver(xOff,yOff,scale,scale,spriteNum);
+                Interface_ScaleSpriteOver(interfaceList[0],xOff,yOff,scale,scale,spriteNum);
             }
         }
     }
