@@ -14,13 +14,28 @@
 #define DISPLAY_WIDTH LCD_WIDTH * SCALE_FACTOR
 #define DISPLAY_HEIGHT LCD_HEIGHT * SCALE_FACTOR
 
+static int sdl_initialized = 0;
+
 static SDL_Window *window = NULL;
 
 int SCALE_FACTOR = 4;
+void sdl_init(void)
+{
+    if(!sdl_initialized)
+    {
+        if( SDL_Init(SDL_INIT_VIDEO) < 0 )
+            fprintf(stderr,"Error: could not initialized SDL\n");
+        else
+            sdl_initialized = 1;
+    }
+}
+
 void window_init(const unsigned short splash[])
 {
     if(!window)
     {
+        sdl_init();
+
         printf("Created a window!\n");
         window = SDL_CreateWindow("zs3d", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DISPLAY_WIDTH, DISPLAY_HEIGHT, SDL_WINDOW_SHOWN);
 

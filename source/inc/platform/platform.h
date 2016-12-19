@@ -18,7 +18,7 @@ typedef struct TaskHandle_str * TaskHandle;
  * @param func Period for task to be run in microseconds
  * @return A handle for the task info. Used to be passed to maintenance functions
  */
-TaskHandle PeriodicTask_Register( void * func(void), uint32_t period );
+TaskHandle PeriodicTask_Register( void * func(void *), void * param, uint32_t period );
 
 
 void PeriodicTask_Start( TaskHandle handle );

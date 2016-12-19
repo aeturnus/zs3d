@@ -1,10 +1,19 @@
 #include <stdlib.h>
+
+#include <SDL2/SDL.h>
+
 #include "platform/platform.h"
+
+#include "sdl.h"
 
 typedef struct TaskHandle_str
 {
     int valid;
     int enabled;
+    uint32_t period;
+    void (*function)(void*);
+    void * param;
+    SDL_Thread *thread;
 } TaskHandle_Rec;
 
 #define NUM_TASKHANDLE 4
@@ -12,14 +21,36 @@ static TaskHandle_Rec table[NUM_TASKHANDLE] = {{0,0},{0,0},{0,0},{0,0}};
 
 static allocs = 0;
 
-TaskHandle PeriodicTask_Register( void * func(void), uint32_t period )
+static int PeriodicTask_Runner(void * param)
 {
+    TaskHandle handle = (TaskHandle) param;
+    while(handle->valid)
+    {
+        if(handle->enabled)
+        {
+            handle->function(handle->param);
+        }
+        SDL_Delay(handle->period/1000);
+    }
+    return 0;
+}
+
+TaskHandle PeriodicTask_Register( void * func(void *), void * param, uint32_t period )
+{
+    sdl_init();
+
     for(int i = 0; i < NUM_TASKHANDLE; i++)
     {
         if(!table[i].valid)
         {
-            // logic here
             table[i].valid = 1;
+            table[i].enabled= 0;
+            table[i].period = period;
+            table[i].function = func;
+            table[i].param = param;
+            // create thread
+            table[i].thread = SDL_CreateThread(PeriodicTask_Runner, "", &table[i]);
+
             return &table[i];
         }
     }

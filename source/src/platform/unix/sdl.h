@@ -6,7 +6,11 @@
  * This serves as a virtual interface to a 160x128 LCD display
  * This will abstract away all the scaling needed to actually
  * be usable on higher DPI screens
+ *
+ * In addition, it also provides other SDL funcionality
  */
+
+void sdl_init(void);
 
 void window_init(const unsigned short splash[]);
 

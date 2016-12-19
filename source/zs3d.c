@@ -184,7 +184,7 @@ uint32_t directorTimer1 = 0;
 uint32_t directorTimer2 = 0;
 uint32_t directorTimer3 = 0;
 uint32_t bossKills = 0;
-void TimerHandler(void)
+void TimerHandler(void * param)
 {
     globalTimer++;
     if(stateGlobal == PLAY)
@@ -213,7 +213,8 @@ enum GraphicsState {MENU,RAYCASTING};
 enum GraphicsState stateGraphics = MENU;
 uint8_t player1DrawFlag = 0; //Flags to see if drawing is ready
 uint8_t player2DrawFlag = 0;
-void RenderHandler(void)
+#include <stdio.h>
+void RenderHandler(void * param)
 {
     if (stateGraphics == MENU)
     {
@@ -228,7 +229,7 @@ void RenderHandler(void)
 }
 
 //Requests user input
-void InputHandler(void)
+void InputHandler(void * param)
 {
     if(player1Present)
     {
@@ -1265,9 +1266,9 @@ TaskHandle render;
 TaskHandle input;
 int main(void)
 {
-    timer   = PeriodicTask_Register(&TimerHandler,1000);
-    render  = PeriodicTask_Register(&RenderHandler,50000);
-    input   = PeriodicTask_Register(&InputHandler,5000);
+    timer   = PeriodicTask_Register(&TimerHandler,NULL,1000);
+    render  = PeriodicTask_Register(&RenderHandler,NULL,50000);
+    input   = PeriodicTask_Register(&InputHandler,NULL,5000);
 
     interfaceList[0] = Interface_New();
     Music_Init();
