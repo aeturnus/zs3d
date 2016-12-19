@@ -91,7 +91,7 @@ void Interface_ClearScreen( Interface interface )
 
 void Interface_DrawBuffer( Interface interface )
 {
-    //TODO: SDL code here
+    window_draw_buffer(&interface->bufman,0,LCD_HEIGHT-BUFFER_HEIGHT);
 }
 
 void Interface_ClearBuffer( Interface interface )
@@ -126,7 +126,7 @@ void Interface_DrawHLine(Interface interface, uint32_t x0, uint32_t y, uint32_t 
 
 void Interface_DirectFillRect(Interface interface, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) // need to figure out how to deal with this
 {
-    //TODO: SDL code
+    window_fill_rect(x,y,w,h,color);
 }
 
 void Interface_SetCursor(Interface interface, uint32_t x, uint32_t y)
@@ -213,6 +213,7 @@ void Interface_GetInput( Interface interface )
     interface->y = keyStates[SDL_SCANCODE_I];
     interface->l = keyStates[SDL_SCANCODE_N];
     interface->r = keyStates[SDL_SCANCODE_SPACE];
+    /*
     printf("x-axis: %d, y-axis: %d, a: %d, b: %d, x: %d, y: %d, l: %d, r: %d\n",
         interface->analog[0],
         interface->analog[1],
@@ -222,6 +223,7 @@ void Interface_GetInput( Interface interface )
         interface->y,
         interface->l,
         interface->r);
+    */
 }
 
 void Interface_DrawBitmap( Interface interface, int32_t x,int32_t y, int32_t w, int32_t h, uint16_t index)
