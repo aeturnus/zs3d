@@ -845,7 +845,6 @@ void actIntelligence(fixed32_3 dT)
 
 void actWorld(void)
 {
-    //Random_Init(SysTick_Current); //New seed
     player1DrawFlag = 0;    //Disable drawing
     player2DrawFlag = 0;
 
@@ -1243,7 +1242,7 @@ void startGame(void)
             case TITLE:
                 if(Interface_GetDigital(interfaceList[0],'a'))
                 {
-                    // Random_Init(SysTick_Current^globalTimer);
+                    Random_Init(globalTimer);
                     Music_PauseSong();
                     stateGlobal = PLAY;
                     stateGraphics = RAYCASTING;

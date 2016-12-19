@@ -31,7 +31,26 @@ void PeriodicTask_Stop( TaskHandle handle );
 void PeriodicTask_Terminate( TaskHandle handle );
 
 
+
+/**
+ * Sets the seed for the RNG
+ */
+void Random_Init(uint32_t seed);
+
+/**
+ * Returns a number from 0-0xFFFFFFFF
+ */
 uint32_t Random32(void);
+
+/**
+ * Returns a number from 0-0xFFFF
+ */
+uint16_t Random16(void);
+
+/**
+ * Returns a number from 0-0xFF
+ */
+uint8_t Random8(void);
 
 
 #endif // __PLATFORM_H__

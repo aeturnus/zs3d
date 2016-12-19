@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "platform/platform.h"
 
 typedef struct TaskHandle_str
@@ -38,4 +39,25 @@ void PeriodicTask_Stop( TaskHandle handle )
 void PeriodicTask_Terminate( TaskHandle handle )
 {
     handle->valid = 0;
+}
+
+void Random_Init(uint32_t seed)
+{
+    srand(seed);
+}
+
+uint32_t Random32(void)
+{
+    uint16_t output = Random16() << 16 | Random16();
+    return output;
+}
+
+uint16_t Random16(void)
+{
+    return rand() & 0xFFFF;
+}
+
+uint8_t Random8(void)
+{
+    return rand() & 0xFF;
 }
