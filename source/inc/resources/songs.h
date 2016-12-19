@@ -1,7 +1,7 @@
 #ifndef __SONGS_H__
 #define __SONGS_H__
 #include <stdint.h>
-#include "../../brandonware/BrandonMML.h"
+#include "brandonware/bmml.h"
 
 const uint8_t nullsong[] = "";
 
@@ -31,6 +31,6 @@ const uint8_t* fire[] = {fire1};
 
 
 #define SONG_NUM 4
-const struct BMML_Song songArray[] = {{2,(uint8_t**)iv},{2,(uint8_t**)cs},{2,(uint8_t**)rh},{2,(uint8_t**)LostWoods},{1,(uint8_t**)fire}};
+const BMML_Song songArray[] = {{2,(uint8_t**)iv},{2,(uint8_t**)cs},{2,(uint8_t**)rh},{2,(uint8_t**)LostWoods},{1,(uint8_t**)fire}};
 
 #endif

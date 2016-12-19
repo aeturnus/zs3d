@@ -1,6 +1,11 @@
 #ifndef __SOUNDS_H__
 #define __SOUNDS_H__
-#include "../../drivers/Sound.h"
+
+typedef struct sound_str
+{
+	uint32_t length;
+	uint8_t* soundPtr;
+} sound;
 
 const unsigned char snd_null[1] = {0};
 
@@ -22,9 +27,9 @@ const unsigned char snd_helo[115206] = {128,128,128,128,128,128,128,127,127,127,
 
 
 
-const sound soundsList[] = 
+const sound soundsList[] =
 {
-  {1,(uint8_t*)&snd_null},                //0  
+  {1,(uint8_t*)&snd_null},                //0
   {952,(uint8_t*)&snd_gunempty},          //1
   {3086,(uint8_t*)&snd_gunmag},           //2
   {11004,(uint8_t*)&snd_gunchamber},      //3
