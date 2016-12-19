@@ -2,13 +2,13 @@
 #include "platform/interface.h"
 #include "sdl.h"
 
-#define getR_RGB(x) ((x&0xF800)>>11)
-#define getG_RGB(x) ((x&0x07E0)>> 4)
+#define getR_RGB(x) ((x&0xF800)>> 8)
+#define getG_RGB(x) ((x&0x07E0)>> 3)
 #define getB_RGB(x) ((x&0x001F)<< 2)
 
 // GG ST7735 for having BGR565
 #define getB_BGR(x) ((x&0xF800)>> 8)
-#define getG_BGR(x) ((x&0x07E0)>> 4)
+#define getG_BGR(x) ((x&0x07E0)>> 3)
 #define getR_BGR(x) ((x&0x001F)<< 2)
 
 #define DISPLAY_WIDTH LCD_WIDTH * SCALE_FACTOR
