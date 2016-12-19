@@ -11,7 +11,7 @@
 
 typedef struct interface_str
 {
-    int present;
+    unsigned int present : 1;
     int32_t analog[2];
     unsigned int a : 1;
     unsigned int b : 1;
@@ -28,6 +28,17 @@ Interface Interface_New( void )
 {
     Interface interface = malloc(sizeof(Interface_Rec));
     BM_BufferInit_16(&interface->bufman, interface->buffer, BUFFER_WIDTH, BUFFER_HEIGHT);
+
+    interface->present = 0;
+    interface->analog[0] = 0;
+    interface->analog[1] = 0;
+    interface->a = 0;
+    interface->b = 0;
+    interface->x = 0;
+    interface->y = 0;
+    interface->l = 0;
+    interface->r = 0;
+
     return interface;
 }
 
@@ -36,6 +47,20 @@ void Interface_Done( Interface interface )
     free(interface);
 }
 
+void Interface_Reset( Interface interface )
+{
+    // do nothing
+}
+
+void Interface_Ping( Interface interface )
+{
+    interface->present = 1;
+}
+
+int Interface_IsPresent( Interface interface )
+{
+    return interface->present;
+}
 
 void Interface_ClearScreen( Interface interface )
 {
