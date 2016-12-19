@@ -2,6 +2,7 @@
 #define __PLATFORM_H__
 
 #include <stdint.h>
+#include <stddef.h>
 
 #include "brandonware/btypes.h"
 
