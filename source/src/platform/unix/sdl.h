@@ -2,7 +2,13 @@
 #define __SDL_WRAPPER_H__
 #include <SDL2/SDL.h>
 
-void window_init(unsigned int width, unsigned int height,const unsigned short splash[]);
+/*
+ * This serves as a virtual interface to a 160x128 LCD display
+ * This will abstract away all the scaling needed to actually
+ * be usable on higher DPI screens
+ */
+
+void window_init(const unsigned short splash[]);
 
 void window_cleanup(void);
 

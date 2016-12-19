@@ -6,9 +6,6 @@
 
 extern int SCALE_FACTOR;
 
-#define DISPLAY_WIDTH LCD_WIDTH * SCALE_FACTOR
-#define DISPLAY_HEIGHT LCD_HEIGHT * SCALE_FACTOR
-
 #define BUFFER_WIDTH LCD_WIDTH
 #define BUFFER_HEIGHT 90
 
@@ -32,7 +29,7 @@ static int interfaceCounter = 0;
 Interface Interface_New( void )
 {
     if(interfaceCounter == 0)
-        window_init(DISPLAY_WIDTH,DISPLAY_HEIGHT,splash);
+        window_init(splash);
 
     interfaceCounter += 1;
 
