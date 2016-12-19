@@ -155,7 +155,7 @@ uint8_t worldArray[] =
 //Function prototypes
 void renderWorld();
 
-
+int gameActive = 1;
 char str[30];
 player player1;
 uint32_t digitalHold1;
@@ -1235,7 +1235,7 @@ void startGame(void)
     initPlayer(&player1);
     //initPlayer(&player2);
 
-    while(1)
+    while(gameActive)
     {
         switch(stateGlobal)
         {
