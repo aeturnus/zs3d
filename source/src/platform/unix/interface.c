@@ -74,7 +74,7 @@ void Interface_DrawVLine(Interface interface, uint32_t x, uint32_t y0, uint32_t 
 
 void Interface_DrawHLine(Interface interface, uint32_t x0, uint32_t y, uint32_t x1, uint16_t color)
 {
-    BM_DrawHLine_16(x,y0,y1,color,&interface->bufman);
+    BM_DrawHLine_16(x0,y,x1,color,&interface->bufman);
 }
 
 void Interface_DirectFillRect(Interface interface, uint16_t x, uint16_t y, uint16_t w, uint16_t h, uint16_t color) // need to figure out how to deal with this
