@@ -1280,9 +1280,9 @@ int main(void)
     Music_LoadSong(4);
     Music_PlaySong();
 
-    PeriodTask_Start(timer);
-    PeriodTask_Start(render);
-    PeriodTask_Start(input);
+    PeriodicTask_Start(timer);
+    PeriodicTask_Start(render);
+    PeriodicTask_Start(input);
 
     startGame();
     return 0;
