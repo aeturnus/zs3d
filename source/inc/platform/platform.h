@@ -58,5 +58,10 @@ uint16_t Random16(void);
  */
 uint8_t Random8(void);
 
+/**
+ * Delay for some microseconds
+ */
+void Delay(uint32_t us);
+
 
 #endif // __PLATFORM_H__

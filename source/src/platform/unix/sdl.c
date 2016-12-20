@@ -18,7 +18,7 @@ static int sdl_initialized = 0;
 
 static SDL_Window *window = NULL;
 
-int SCALE_FACTOR = 4;
+int SCALE_FACTOR = 6;
 void sdl_init(void)
 {
     if(!sdl_initialized)

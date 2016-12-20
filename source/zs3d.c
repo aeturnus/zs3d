@@ -184,18 +184,19 @@ uint32_t directorTimer1 = 0;
 uint32_t directorTimer2 = 0;
 uint32_t directorTimer3 = 0;
 uint32_t bossKills = 0;
+#define TICK 2
 void TimerHandler(void * param)
 {
-    globalTimer++;
+    globalTimer += TICK;
     if(stateGlobal == PLAY)
     {
-        gameTimer++;
-        player1Timer += player1.active?1:0;
-        player2Timer += player2.active?1:0;
-        physicsTimer++;
-        directorTimer1++;
-        directorTimer2++;
-        directorTimer3++;
+        gameTimer += TICK;
+        player1Timer += player1.active?TICK:0;
+        player2Timer += player2.active?TICK:0;
+        physicsTimer += TICK;
+        directorTimer1 += TICK;
+        directorTimer2 += TICK;
+        directorTimer3 += TICK;
     }
 }
 
@@ -1262,7 +1263,7 @@ void startGame(void)
                 break;
             case PLAY:
                 actWorld();
-                for(int i = 0; i < 0xFFFFFF; i++);
+                Delay(1000);
                 //printf("x: %d, y: %d, r: %d, vx: %d, vy: %d\n", player1.entityData.pos.x, player1.entityData.pos.y, player1.entityData.rot,player1.entityData.vel.x, player1.entityData.vel.y );
                 break;
         }

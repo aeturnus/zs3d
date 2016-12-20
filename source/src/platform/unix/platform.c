@@ -92,3 +92,8 @@ uint8_t Random8(void)
 {
     return rand() & 0xFF;
 }
+
+void Delay(uint32_t us)
+{
+    SDL_Delay(us/1000);
+}
