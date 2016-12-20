@@ -252,40 +252,17 @@ void renderWall(ray inputRay,uint32_t i,uint8_t interface)
     //height = ((HEIGHT) - ((inputRay.distance)/10000))>>2;
     //height = 20;
     //height = toDec_3(div32_3_lhp((90 * camera1.focal),inputRay.distance));
+    //height = 90 - inputRay.distance * 15 / 10000;
+    //height = toDec_3(div32_3_lhp((90 * camera1.focal),inputRay.distance));
     height = 92 - inputRay.distance * 15 / 10000;
-    if(height<0){height = 0;};
     if(height>90){height = 90;};
     if(height>0)
     {
-        if(inputRay.wallMeta & X_HIT)
-        {
-            switch(interface)
-            {
-            case 1:
-                //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
-                //Interface1_DrawVLine(i,45-height/2,45+height/2,0xFFFF);
-                Interface_DrawLine(interfaceList[0],i,45-height/2,i,45+height/2,BM_BGRTo565(214,198,80));
-                break;
-            case 2:
-                //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
-                break;
-            }
-        }
-        else
-        {
-            switch(interface)
-            {
-            case 1:
-                //Interface1_DrawVLine(i,HEIGHT/2-height/2,height/2,BM_BGRTo565(127,127,127));
-                //Interface1_DrawVLine(i,45-height/2,45+height/2,BM_BGRTo565(127,127,127));
-                Interface_DrawLine(interfaceList[0],i,45-height/2,i,45+height/2,BM_BGRTo565(127,127,127));
-                break;
-            case 2:
-                //Interface2_DrawVLine(i,HEIGHT/2-height/2,height/2,0xFFFF);
-                break;
-            }
-        }
+        uint16_t color = inputRay.wallMeta & X_HIT? BM_BGRTo565(214,198,80) : BM_BGRTo565(127,127,127);
+        Interface_DrawLine(interfaceList[interface],i,45-height/4,i,45+height/4,color);
+        //Interface_DrawLine(interfaceList[interface],i,90-height,i,height,color);
     }
+
 }
 
 void renderWorld(void)
@@ -312,8 +289,7 @@ void renderWorld(void)
     uint32_t i = 0;
     for(i = 0; i < COLUMNS; i++)
     {
-        renderWall(camera1.rayArray[i],i,1);
-        renderWall(camera2.rayArray[i],i,2);
+        renderWall(camera1.rayArray[i],i,0);
     }
 
     //Render and occlude enemies and items
@@ -1191,7 +1167,7 @@ void initPlayer(player* plyr)
     initWeapon(&plyr->weapons[3],weaponPresets[WPN_AR15]);
 
 
-    plyr->speed = 1000;
+    plyr->speed = 3000;
 
     plyr->entityData.pos.x = 20000;
     plyr->entityData.pos.y = 20000;
