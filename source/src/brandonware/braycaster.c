@@ -221,7 +221,7 @@ void RC_CastRay(camera* cameraPtr,world* worldPtr, fixed32_3 angle,uint32_t inde
     #else
 
     //I present: the shittiest distance finder ever. Plods along at a constant dR
-    #define DISTANCE_CHANGE 50 //dR constant is .100
+    #define DISTANCE_CHANGE 10 //dR constant is .100
     fixed32_3 dX = mul32_3(DISTANCE_CHANGE,cosineFix(angle));    //get the change in x
     fixed32_3 dY = mul32_3(DISTANCE_CHANGE,sineFix(angle));      //get the change in y
     fixed32_3 x = cameraPtr->pos.x;                    //start position x

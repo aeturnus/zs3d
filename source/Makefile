@@ -12,7 +12,7 @@ OBJDIR = obj
 OBJECTS = $(SOURCES:.c=.o)
 
 ifeq ($(PLATFORM),unix)
-LIBS = -lSDL2
+LIBS = -lSDL2 -lSDL2_mixer
 endif
 
 .c.o:

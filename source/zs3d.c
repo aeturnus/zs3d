@@ -1263,8 +1263,8 @@ void startGame(void)
                 break;
             case PLAY:
                 actWorld();
-                Delay(1000);
                 //printf("x: %d, y: %d, r: %d, vx: %d, vy: %d\n", player1.entityData.pos.x, player1.entityData.pos.y, player1.entityData.rot,player1.entityData.vel.x, player1.entityData.vel.y );
+                Delay(1000);
                 break;
         }
     }
@@ -1282,7 +1282,6 @@ int main(void)
     input   = PeriodicTask_Register(&InputHandler,NULL,5000);
 
     interfaceList[0] = Interface_New();
-    Music_Init();
     Music_LoadSong(4);
     Music_PlaySong();
 

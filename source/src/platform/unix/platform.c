@@ -10,6 +10,7 @@
 int Systems_Init(void)
 {
     sdl_init();
+    Music_Init();
 }
 
 typedef struct TaskHandle_str
