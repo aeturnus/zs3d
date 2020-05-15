@@ -1245,6 +1245,7 @@ void startGame(void)
                 Delay(1000);
                 break;
         }
+        RenderHandler(NULL);
     }
 }
 
@@ -1256,7 +1257,7 @@ int main(void)
     Systems_Init();
 
     timer   = PeriodicTask_Register(&TimerHandler,NULL,1000);
-    render  = PeriodicTask_Register(&RenderHandler,NULL,50000);
+    //render  = PeriodicTask_Register(&RenderHandler,NULL,50000);
     input   = PeriodicTask_Register(&InputHandler,NULL,5000);
 
     interfaceList[0] = Interface_New();
@@ -1264,7 +1265,7 @@ int main(void)
     Music_PlaySong();
 
     PeriodicTask_Start(timer);
-    PeriodicTask_Start(render);
+    //PeriodicTask_Start(render);
     PeriodicTask_Start(input);
 
     startGame();
