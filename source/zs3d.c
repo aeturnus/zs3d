@@ -187,6 +187,7 @@ uint32_t bossKills = 0;
 #define TICK 2
 void TimerHandler(void * param)
 {
+    //printf("globalTimer %d\n", globalTimer);
     globalTimer += TICK;
     if(stateGlobal == PLAY)
     {
@@ -224,7 +225,8 @@ void RenderHandler(void * param)
     }
     else if(stateGraphics == RAYCASTING)
     {
-      renderWorld();
+        Interface_ClearScreen(interfaceList[0]);
+        renderWorld();
     }
     Interface_UpdateScreen(interfaceList[0]);
 }

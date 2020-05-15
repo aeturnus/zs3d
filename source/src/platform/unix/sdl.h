@@ -19,6 +19,8 @@ void window_init(const unsigned short splash[]);
 
 void window_cleanup(void);
 
+void window_clear(void);
+
 void window_refresh(void);
 
 void window_draw_buffer(buffer16 * bufman, int32_t x, int32_t y);

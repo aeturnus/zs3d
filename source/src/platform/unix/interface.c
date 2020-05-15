@@ -87,6 +87,7 @@ void Interface_UpdateScreen( Interface interface )
 void Interface_ClearScreen( Interface interface )
 {
     BM_ClearBuffer_16(&interface->bufman);
+    window_clear();
 }
 
 void Interface_DrawBuffer( Interface interface )
